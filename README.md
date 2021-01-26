@@ -186,5 +186,9 @@ $ STAGE=sandbox aws-vault exec FIRST.LAST-admin -- \
 
 See the [aws-lambda-serverless-reference][] docs for additional Serverless/Lambda (`yarn lambda:*`) tasks you can run.
 
+`yarn lambda:info` gives the current APIGW endpoints. As a useful helper we've separately hooked up a custom domain for `STAGE=sandbox` at:
+
+https://nextjs-sls-sandbox.formidable.dev/blog/
+
 [aws-lambda-serverless-reference]: https://github.com/FormidableLabs/aws-lambda-serverless-reference
 [aws-vault]: https://github.com/99designs/aws-vault
