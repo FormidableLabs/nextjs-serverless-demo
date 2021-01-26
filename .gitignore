@@ -15,9 +15,8 @@ coverage
 # next.js
 /.next/
 /out/
-
-# production
 /build
 
-# terraform
+# infrastructure
 .terraform
+.serverless

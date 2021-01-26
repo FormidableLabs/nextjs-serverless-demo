@@ -27,13 +27,25 @@ Start with:
 $ yarn install
 ```
 
-### Development server
+### Next.js Development server
 
 ```sh
 $ yarn dev
 ```
 
-### Production server
+and visit: http://127.0.0.1:3000/
+
+### Serverless development server
+
+This uses `serverless-offline` to simulate the application running on Lambda.
+
+```sh
+$ yarn lambda:localdev
+```
+
+and visit: http://127.0.0.1:4000/localdev/blog/
+
+### Next.js Production server
 
 This repo _doesn't_ use the prod server, but if you want to create it, here you go:
 
@@ -105,11 +117,11 @@ Our CloudFormation code in `aws/` provisions backend services for Terraform to s
 
 ```sh
 # Provision stack.
-$ STAGE=sandbox aws-vault exec FIRST.LAST --no-session -- \
+$ STAGE=sandbox aws-vault exec FIRST.LAST -- \
   yarn cf:bootstrap:create
 
 # Check status until reach `CREATE_COMPLETE`
-$ STAGE=sandbox aws-vault exec FIRST.LAST --no-session -- \
+$ STAGE=sandbox aws-vault exec FIRST.LAST -- \
   yarn cf:bootstrap:status
 "CREATE_COMPLETE"
 ```
@@ -123,11 +135,13 @@ Our Terraform code in `terraform/` provisions Terraform resources to support the
 **Init** your local Terraform state.
 
 ```sh
-$ STAGE=sandbox aws-vault exec FIRST.LAST --no-session -- \
+$ STAGE=sandbox aws-vault exec FIRST.LAST -- \
   yarn tf:service:init --reconfigure
 ```
 
 > ⚠️ **Warning**: You need to run `yarn run tf:service:init` **every** time you change `STAGE`. We suggest using the `--reconfigure` flag **every** time you run `init` to make sure that you're in the right state and backend.
+
+> ℹ️ **Note**: The following commands require `--no-session` for `aws-vault` because they deal with IAM stuff that requires extra privileges.
 
 **Plan** the Terraform stack.
 
@@ -148,9 +162,29 @@ $ STAGE=sandbox aws-vault exec FIRST.LAST --no-session -- \
 
 See the [aws-lambda-serverless-reference][] docs for additional CloudFormation (`yarn tf:*`) tasks you can run.
 
+### Deploy to Lambda
 
+Once the base infrastructure is in place, we will use `serverless` to deploy to AWS Lambda.
 
-TODO_HERE: FINISH DOCS
+We use AWS IAM users with different privileges for these commands. `FIRST.LAST-admin` can create/delete/deploy the Serverless app. `FIRST.LAST-developer` can only deploy the Serverless app but not create/delete resources.
+
+> ℹ️ **Note**: The `-admin|-developer` groups were created in the Terraform provisioning step and you must then attach them to separately created appropriate IAM users. At Formidable, we have an internal operations repository that manages these users and associates the groups created in this project.
+
+**Create** the Lambda app. The first time through a `deploy`, an `-admin` user
+is required (to effect the underlying CloudFormation changes).
+
+```sh
+$ STAGE=sandbox aws-vault exec FIRST.LAST-admin -- \
+  yarn lambda:deploy
+
+# Check on app and endpoints.
+$ STAGE=sandbox aws-vault exec FIRST.LAST-admin -- \
+  yarn lambda:info
+```
+
+**Deploy** the Lambda app. Use the exact same steps as above, just with either an `-admin` or `-developer` user.
+
+See the [aws-lambda-serverless-reference][] docs for additional Serverless/Lambda (`yarn lambda:*`) tasks you can run.
 
 [aws-lambda-serverless-reference]: https://github.com/FormidableLabs/aws-lambda-serverless-reference
 [aws-vault]: https://github.com/99designs/aws-vault

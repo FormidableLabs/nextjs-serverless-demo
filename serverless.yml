@@ -1,0 +1,53 @@
+# CloudFormation output name: `sls-${SERVICE_NAME}-${STAGE}`
+service: sls-${self:custom.service}
+
+custom:
+  service: ${env:SERVICE_NAME}
+  region: ${opt:region, env:AWS_REGION}
+  stage: ${opt:stage, env:STAGE}
+  jetpack:
+    preInclude:
+      - "!**" # Start with no files at all.
+    trace:
+      # Use trace mode for speed and ignore aws-sdk + all deps
+      ignores:
+        - "aws-sdk"
+
+plugins:
+  - serverless-jetpack
+  - serverless-offline
+
+provider:
+  name: aws
+
+  # Required: import the default role that terraform-aws-serverless generates.
+  role:
+    Fn::ImportValue: tf-${self:custom.service}-${self:custom.stage}-LambdaExecutionRoleArn
+
+  # Lambda configuration
+  runtime: nodejs12.x
+  timeout: 30 # seconds (`300` max)
+  memorySize: 128 # MB value (`1024` default)
+
+  # Deployment / environment configuration
+  region: ${self:custom.region}
+  stage: ${self:custom.stage}
+  environment:
+    STAGE: ${self:custom.stage}
+    SERVICE_NAME: ${self:custom.service}
+
+  # AWS Resource Tags: Match terraform module
+  stackTags: # For CF stack
+    Stage: ${self:custom.stage}
+    Service: ${self:custom.service}
+  tags: # For resources
+    Stage: ${self:custom.stage}
+    Service: ${self:custom.service}
+
+functions:
+  # SCENARIO - base: The simplest, vanilla Serverless app.
+  blog:
+    handler: temp/index.handler # TODO: REPLACE WITH NEXT APP
+    events: # Use a generic proxy to allow Express app to route.
+      - http: ANY /blog
+      - http: 'ANY /blog/{proxy+}'
