@@ -114,10 +114,43 @@ $ STAGE=sandbox aws-vault exec FIRST.LAST --no-session -- \
 "CREATE_COMPLETE"
 ```
 
+See the [aws-lambda-serverless-reference][] docs for additional CloudFormation (`yarn cf:*`) tasks you can run.
+
+#### Provision Terraform backend
+
+Our Terraform code in `terraform/` provisions Terraform resources to support the Serverless application.
+
+**Init** your local Terraform state.
+
+```sh
+$ STAGE=sandbox aws-vault exec FIRST.LAST --no-session -- \
+  yarn tf:service:init --reconfigure
+```
+
+> ⚠️ **Warning**: You need to run `yarn run tf:service:init` **every** time you change `STAGE`. We suggest using the `--reconfigure` flag **every** time you run `init` to make sure that you're in the right state and backend.
+
+**Plan** the Terraform stack.
+
+```sh
+$ STAGE=sandbox aws-vault exec FIRST.LAST --no-session -- \
+  yarn run tf:service:plan
+```
+
+**Apply** the Terraform stack:
+
+This creates / updates as appropriate.
+
+```sh
+# Type in `yes` to go forward
+$ STAGE=sandbox aws-vault exec FIRST.LAST --no-session -- \
+  yarn tf:service:apply
+```
+
+See the [aws-lambda-serverless-reference][] docs for additional CloudFormation (`yarn tf:*`) tasks you can run.
 
 
 
-
+TODO_HERE: FINISH DOCS
 
 [aws-lambda-serverless-reference]: https://github.com/FormidableLabs/aws-lambda-serverless-reference
 [aws-vault]: https://github.com/99designs/aws-vault
