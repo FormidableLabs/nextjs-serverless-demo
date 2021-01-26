@@ -10,3 +10,10 @@ yarn-error.log*
 .nyc_output
 
 coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
