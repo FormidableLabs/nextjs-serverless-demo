@@ -87,9 +87,37 @@ $ brew install tfenv
 $ tfenv install
 ```
 
+*Get AWS vault*
+
+```sh
+$ brew install aws-vault
+```
+
+### Bootstrap the project
+
+This section only needs to be run **once** by an AWS superuser to set up the initial cloud infrastructure.
+
+#### Provision AWS backend
+
+Our CloudFormation code in `aws/` provisions backend services for Terraform to store state in.
+
+**Create** the CloudFormation stack:
+
+```sh
+# Provision stack.
+$ STAGE=sandbox aws-vault exec FIRST.LAST --no-session -- \
+  yarn cf:bootstrap:create
+
+# Check status until reach `CREATE_COMPLETE`
+$ STAGE=sandbox aws-vault exec FIRST.LAST --no-session -- \
+  yarn cf:bootstrap:status
+"CREATE_COMPLETE"
+```
+
 
 
 
 
 
 [aws-lambda-serverless-reference]: https://github.com/FormidableLabs/aws-lambda-serverless-reference
+[aws-vault]: https://github.com/99designs/aws-vault

@@ -14,6 +14,18 @@
 
     "env": "echo export STAGE=${STAGE:-localdev}; echo export SERVICE_NAME=nextjs-serverless; echo export AWS_REGION=${AWS_REGION:-us-east-1}; echo export AWS_XRAY_CONTEXT_MISSING=LOG_ERROR",
 
+    "cf:_params": "eval $(yarn -s env) && echo --parameters ParameterKey=Stage,ParameterValue=${STAGE} ParameterKey=ServiceName,ParameterValue=${SERVICE_NAME}",
+    "cf:bootstrap:_stack": "eval $(yarn -s env) && echo --region ${AWS_REGION} --stack-name cf-${SERVICE_NAME}-${STAGE}-bootstrap",
+    "cf:bootstrap:_tmpl": "echo --template-body file://aws/bootstrap.yml ",
+    "cf:bootstrap:create": "aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM $(yarn -s cf:bootstrap:_tmpl) $(yarn -s cf:bootstrap:_stack) $(yarn -s cf:_params)",
+    "cf:bootstrap:update": "aws cloudformation update-stack --capabilities CAPABILITY_NAMED_IAM $(yarn -s cf:bootstrap:_tmpl) $(yarn -s cf:bootstrap:_stack) $(yarn -s cf:_params)",
+    "cf:bootstrap:status": "aws cloudformation describe-stacks --query 'Stacks[0].StackStatus' $(yarn -s cf:bootstrap:_stack)",
+    "cf:bootstrap:_get-bucket-versions": "eval $(yarn -s env) && aws s3api list-object-versions --bucket=\"cf-${SERVICE_NAME}-${STAGE}-terraform-state\" --output=json --query=\"{Objects: Versions[].{Key:Key,VersionId:VersionId}}\"",
+    "cf:bootstrap:_empty-bucket": "eval $(yarn -s env) && aws s3api delete-objects --bucket=\"cf-${SERVICE_NAME}-${STAGE}-terraform-state\" --delete=\"$(yarn -s cf:bootstrap:_get-bucket-versions)\" || echo \"No objects deleted/found.\"",
+    "cf:bootstrap:_delete-stack": "eval $(yarn -s env) && aws cloudformation delete-stack $(yarn -s cf:bootstrap:_stack)",
+    "cf:bootstrap:_delete": "eval $(yarn -s env) && yarn cf:bootstrap:_empty-bucket && yarn cf:bootstrap:_delete-stack",
+
+    "TODO": "echo remove last entry"
   },
   "dependencies": {
     "date-fns": "^2.11.1",
