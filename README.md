@@ -3,8 +3,6 @@ Next.js Serverless Demo
 
 Deploy Next.js to AWS Lambda using the Serverless Application Framework.
 
-_Based on the fine work in _
-
 ## Project notes
 
 This demo uses the following tools:
