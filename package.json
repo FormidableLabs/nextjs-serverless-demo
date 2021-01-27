@@ -9,6 +9,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "clean": "rm -rf .next",
     "build": "next build",
     "start": "next start",
     "env": "echo export STAGE=${STAGE:-localdev}; echo export SERVICE_NAME=nextjs-serverless; echo export AWS_REGION=${AWS_REGION:-us-east-1}; echo export AWS_XRAY_CONTEXT_MISSING=LOG_ERROR",
