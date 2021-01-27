@@ -12,14 +12,15 @@ const HOST = process.env.SERVER_HOST || "0.0.0.0";
 const app = createServer((req, res) => page.render(req, res));
 
 // TODO: IMPLEMENT
-// // LAMBDA: Export handler for lambda use.
-// let handler;
-// module.exports.handler = (event, context, callback) => {
-//   // Lazy require `serverless-http` to allow non-Lambda targets to omit.
-//   // eslint-disable-next-line global-require
-//   handler = handler || require("serverless-http")(app);
-//   return handler(event, context, callback);
-// };
+// LAMBDA: Export handler for lambda use.
+let handler;
+module.exports.handler = async (event, context) => {
+  // Lazy require to allow non-Lambda targets to omit.
+  // eslint-disable-next-line global-require
+  const nextToLambda = require("next-aws-lambda");
+
+  return nextToLambda(page)(event, context);
+};
 
 // DOCKER/DEV/ANYTHING: Start the server directly.
 if (require.main === module) {
