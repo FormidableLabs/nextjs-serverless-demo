@@ -47,7 +47,7 @@ provider:
 functions:
   # SCENARIO - base: The simplest, vanilla Serverless app.
   blog:
-    handler: temp/index.handler # TODO: REPLACE WITH NEXT APP
+    handler: server/index.js
     events: # Use a generic proxy to allow Express app to route.
       - http: ANY /blog
       - http: 'ANY /blog/{proxy+}'
