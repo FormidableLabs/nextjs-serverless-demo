@@ -20,9 +20,10 @@ custom:
         "node-fetch":
           - "encoding"
       # TODO: RESOLUTIONS
-      # dynamic:
-      #   resolutions:
-      # - node_modules/@ampproject/toolbox-optimizer/lib/DomTransformer.js [169:22]: require(`./transformers/${Transformer}.js`)
+      dynamic:
+        resolutions:
+          # [169:22]: require(`./transformers/${Transformer}.js`)
+          "@ampproject/toolbox-optimizer/lib/DomTransformer.js": []
 
 plugins:
   - serverless-jetpack
@@ -62,3 +63,6 @@ functions:
     events: # Use a generic proxy to allow Express app to route.
       - http: ANY /blog
       - http: 'ANY /blog/{proxy+}'
+    package:
+      include:
+        - "posts/**/*.md"
