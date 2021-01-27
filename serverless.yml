@@ -12,6 +12,17 @@ custom:
       # Use trace mode for speed and ignore aws-sdk + all deps
       ignores:
         - "aws-sdk"
+        - "critters"
+      allowMissing:
+        # TODO: Add to trace-dep
+        # "./.next/serverless/pages/index.js":
+        #   - "critters" # For CSS optimization
+        "node-fetch":
+          - "encoding"
+      # TODO: RESOLUTIONS
+      # dynamic:
+      #   resolutions:
+      # - node_modules/@ampproject/toolbox-optimizer/lib/DomTransformer.js [169:22]: require(`./transformers/${Transformer}.js`)
 
 plugins:
   - serverless-jetpack
