@@ -1,6 +1,9 @@
 # CloudFormation output name: `sls-${SERVICE_NAME}-${STAGE}`
 service: sls-${self:custom.service}
 
+package:
+  individually: true
+
 custom:
   service: ${env:SERVICE_NAME}
   region: ${opt:region, env:AWS_REGION}
@@ -65,4 +68,5 @@ functions:
       - http: 'ANY /blog/{proxy+}'
     package:
       include:
+        # Raw data for posts is read from disk outside `.next` build directory.
         - "posts/**/*.md"
