@@ -24,6 +24,9 @@ custom:
         - "sass-loader"
         - "pnp-webpack-plugin"
 
+        # Ignore some build time webpack-y things.
+        - "next-plugin-loader?middleware=document-head-tags-server!"
+
       allowMissing:
         # TODO(trace-deps): Add to trace-deps
         # "./.next/serverless/pages/index.js":
@@ -34,11 +37,22 @@ custom:
           - "critters"  # for CSS optimization
           - "pnpapi"    # for PnP usage
 
-      # TODO: RESOLUTIONS
       dynamic:
         resolutions:
           # [169:22]: require(`./transformers/${Transformer}.js`)
           "@ampproject/toolbox-optimizer/lib/DomTransformer.js": []
+
+          # express/lib/view.js [81:13]: require(mod)
+          "express/lib/view.js": []
+
+          # Next.js lazy-loading of manifests and server page bundles.
+          # next/dist/next-server/server/load-components.js [1:1034]: require((0,_path.join)(distDir,_constants.BUILD_MANIFEST))
+          # next/dist/next-server/server/load-components.js [1:1093]: require((0,_path.join)(distDir,_constants.REACT_LOADABLE_MANIFEST))
+          "next/dist/next-server/server/load-components.js": []
+          # next/dist/next-server/server/require.js [1:656]: require((0,_path.join)(serverBuildPath,_constants.PAGES_MANIFEST))
+          # next/dist/next-server/server/require.js [1:1183]: require(pagePath)
+          # next/dist/next-server/server/require.js [1:1387]: require((0,_path.join)(serverBuildPath,_constants.FONT_MANIFEST))
+          "next/dist/next-server/server/require.js": []
 
 plugins:
   - serverless-jetpack
@@ -83,7 +97,8 @@ functions:
         # Raw data for posts is read from disk outside `.next` build directory.
         - "posts/**/*.md"
         # Needed built Next.js assets and info. (Some of these are also traced).
-        - ".next/{BUILD_ID,*.json}"
+        - ".next/BUILD_ID"
+        - ".next/*.json"
         - ".next/serverless/**"
         # TODO(STATIC): Add a note about this.
         - ".next/static/**"
