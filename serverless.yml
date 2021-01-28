@@ -87,3 +87,4 @@ functions:
         - ".next/serverless/**"
         # TODO(STATIC): Add a note about this.
         - ".next/static/**"
+        - "public/**"

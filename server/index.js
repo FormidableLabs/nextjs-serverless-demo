@@ -16,6 +16,7 @@ const STAGE = process.env.STAGE || "localdev";
 const getApp = async ({ basePath = "" } = {}) => {
   const NEXT_DIR = path.resolve(__dirname, "../.next");
   const NEXT_DATA_DIR = path.resolve(NEXT_DIR, "serverless/pages");
+  const NEXT_PUBLIC_DIR = path.resolve(__dirname, "../public");
   const NEXT_APP_ROOT = "/_next";
 
   const BUILD_ID = (await fs.readFile(path.join(NEXT_DIR, "BUILD_ID"))).toString().trim();
@@ -35,7 +36,7 @@ const getApp = async ({ basePath = "" } = {}) => {
   // NOTE(STATIC): This _also_ could be uploaded to a real static serve.
   // It technically _could_ change from data, so possibly disable SSG and
   // make this always dynamically generated.
-  app.get(`${NEXT_DATA_ROOT}/*`, async (req, res, next) => {
+  app.get(`${NEXT_DATA_ROOT}/*`, (req, res, next) => {
     // Only handle JSON.
     if (req.url.endsWith(".json")) {
       const filePath = req.url.replace(NEXT_DATA_ROOT, NEXT_DATA_DIR);
@@ -46,10 +47,11 @@ const getApp = async ({ basePath = "" } = {}) => {
   });
 
   // Page handlers,
-  app.all(`${basePath}`, (req, res) => {
-    console.log("TODO HERE REQ", req.url);
-    return page.render(req, res);
-  });
+  // TODO(ROUTING): Need all the pages and routing.
+  app.all(`${basePath}`, (req, res) => page.render(req, res));
+
+  // NOTE(STATIC): User-added static assets. Should not be in Lambda.
+  app.use("/", express.static(NEXT_PUBLIC_DIR));
 
   // TODO: 404.
   // TODO: Hook up error (?)

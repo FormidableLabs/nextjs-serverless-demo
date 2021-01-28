@@ -7,6 +7,7 @@ const path = require("path");
 // ----------------------------------------------------------------------------
 //
 // TODO: These are cribbed/tweaked from `trace-deps`. Should abstract / test / something.
+
 // Simple conversion to produce Linux/Mac style forward slash-based paths.
 const toPosix = (file) => !file ? file : file.replace(/\\/g, "/");
 
@@ -39,6 +40,7 @@ const getPackageFromParts = (parts = []) => {
   };
 };
 
+// NOTE: Unused for now. In case we want context parsing, this is useful.
 const getPackageFromContext = (context = "") => {
   const parts = toPosix(path.normalize(context)).split("/");
   const nodeModulesIdx = parts.lastIndexOf("node_modules");
@@ -97,16 +99,7 @@ const nextExternals = () => (...args) => {
   // find things in `node_modules` that we should exclude in addition to
   // the module name itself. And we don't actually scan `node_modules`.
   const requestPkg = getPackageFromRequest(request);
-  const contextPkg = getPackageFromContext(context);
   const externalName = requestPkg ? requestPkg.file : null;
-  console.log("TODO HERE EXTERNAL", {
-    request,
-    requestPkg,
-    // TODO: IGNORE CONTEXT?
-    context,
-    contextPkg,
-    externalName
-  });
   if (externalName !== null) {
     return void callback(null, `commonjs ${externalName}`);
   }
