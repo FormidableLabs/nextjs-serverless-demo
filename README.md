@@ -17,6 +17,11 @@ and is based on the following projects:
 - [nextjs-fargate-demo](https://github.com/FormidableLabs/nextjs-fargate-demo): We deploy the same Next.js application.
 - [aws-lambda-serverless-reference][]: The CloudFormation/Terraform infrastructure approach is basically identical to our reference Serverless project.
 
+The main goals of this demo project are as follows:
+
+1. **Slim down a Next.js Lambda deployment**: The Next.js `target: "serverless"` Node.js outputs are huge. Like really, really big because **each page** contains **all the dependencies**. This project adds a custom externals handler to filter out almost all dependencies in `node_modules` and leave those as normal `require()` calls, thus dramatically decreasing the `pages` bundle sizes. The `node_modules` dependencies are included via `serverless-jetpack` trace mode to keep things tight.
+2. **Single Lambda/APIGW proxy**: `TODO(ROUTING): INSERT_NOTES`
+
 ## Local development
 
 Start with:
