@@ -22,6 +22,10 @@ The main goals of this demo project are as follows:
 1. **Slim down a Next.js Lambda deployment**: The Next.js `target: "serverless"` Node.js outputs are huge. Like really, really big because **each page** contains **all the dependencies**. This project adds a custom externals handler to filter out almost all dependencies in `node_modules` and leave those as normal `require()` calls, thus dramatically decreasing the `pages` bundle sizes. The `node_modules` dependencies are included via `serverless-jetpack` trace mode to keep things tight.
 2. **Single Lambda/APIGW proxy**: `TODO(ROUTING): INSERT_NOTES`
 
+Some caveats:
+
+1. **Static files**: To make this demo a whole lot easier to develop/deploy, we handle serve static assets _from_ the Lambda. This is not what you should do for a real application. Typically, you'll want to stick those assets in an S3 bucket behind a CDN or something. Look for the `TODO(STATIC)` comments variously throughout this repository to see all the shortcuts you should unwind to then reconfigure for static assets "the right way".
+
 ## Local development
 
 Start with:
