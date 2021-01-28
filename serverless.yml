@@ -12,16 +12,28 @@ custom:
     preInclude:
       - "!**" # Start with no files at all.
     trace:
-      # Use trace mode for speed and ignore aws-sdk + all deps
       ignores:
+        # Provided on Lambda
         - "aws-sdk"
+
+        # TODO(trace-deps): Remove once in trace-deps
         - "critters"
+
+        # Ignore real deps in Next.js that we shouldn't need at runtime.
+        - "webpack"
+        - "sass-loader"
+        - "pnp-webpack-plugin"
+
       allowMissing:
-        # TODO: Add to trace-dep
+        # TODO(trace-deps): Add to trace-deps
         # "./.next/serverless/pages/index.js":
         #   - "critters" # For CSS optimization
         "node-fetch":
           - "encoding"
+        "next":
+          - "critters"  # for CSS optimization
+          - "pnpapi"    # for PnP usage
+
       # TODO: RESOLUTIONS
       dynamic:
         resolutions:
@@ -70,6 +82,8 @@ functions:
       include:
         # Raw data for posts is read from disk outside `.next` build directory.
         - "posts/**/*.md"
-        # Static assets.
+        # Needed built Next.js assets and info. (Some of these are also traced).
+        - ".next/{BUILD_ID,*.json}"
+        - ".next/serverless/**"
         # TODO(STATIC): Add a note about this.
         - ".next/static/**"

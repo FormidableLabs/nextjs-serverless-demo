@@ -1,31 +1,42 @@
 "use strict";
 
 // TODO: HERE -- Refactor to express with static.
-const { createServer } = require("http");
+const express = require("express");
 
 const page = require("../.next/serverless/pages/index.js");
 
 const DEFAULT_PORT = 3000;
 const PORT = parseInt(process.env.SERVER_PORT || DEFAULT_PORT, 10);
 const HOST = process.env.SERVER_HOST || "0.0.0.0";
+const BASE_PATH = process.env.BASE_PATH || "/blog";
+const STAGE = process.env.STAGE || "localdev";
 
 // Create the server app.
-const app = createServer((req, res) => page.render(req, res));
+const getApp = ({ basePath = "" } = {}) => {
+  const app = express();
+  app.all(`${basePath}`, (req, res) => {
+    console.log("TODO HERE REQ", req.url)
+    return page.render(req, res);
+  });
 
-// TODO: IMPLEMENT
+  return app;
+};
+
 // LAMBDA: Export handler for lambda use.
 let handler;
 module.exports.handler = async (event, context) => {
-  // Lazy require to allow non-Lambda targets to omit.
+  // Lazy require `serverless-http` to allow non-Lambda targets to omit.
   // eslint-disable-next-line global-require
-  const nextToLambda = require("next-aws-lambda");
+  handler = handler || require("serverless-http")(getApp({
+    basePath: BASE_PATH
+  }));
 
-  return nextToLambda(page)(event, context);
+  return handler(event, context);
 };
 
 // DOCKER/DEV/ANYTHING: Start the server directly.
 if (require.main === module) {
-  const server = app.listen({
+  const server = getApp().listen({
     port: PORT,
     host: HOST
   }, () => {

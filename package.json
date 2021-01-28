@@ -11,7 +11,7 @@
     "dev": "next dev",
     "clean": "rm -rf .next",
     "build": "next build",
-    "start": "next start",
+    "start": "node server/index.js",
     "env": "echo export STAGE=${STAGE:-localdev}; echo export SERVICE_NAME=nextjs-serverless; echo export AWS_REGION=${AWS_REGION:-us-east-1}; echo export AWS_XRAY_CONTEXT_MISSING=LOG_ERROR",
     "cf:_params": "eval $(yarn -s env) && echo --parameters ParameterKey=Stage,ParameterValue=${STAGE} ParameterKey=ServiceName,ParameterValue=${SERVICE_NAME}",
     "cf:bootstrap:_stack": "eval $(yarn -s env) && echo --region ${AWS_REGION} --stack-name cf-${SERVICE_NAME}-${STAGE}-bootstrap",
@@ -44,7 +44,6 @@
     "express": "^4.17.1",
     "gray-matter": "^4.0.2",
     "next": "^10.0.0",
-    "next-aws-lambda": "^2.5.1-alpha.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "remark": "^12.0.0",
@@ -54,6 +53,7 @@
   "devDependencies": {
     "serverless": "^2.21.1",
     "serverless-jetpack": "^0.10.7",
-    "serverless-offline": "^6.8.0"
+    "serverless-offline": "^6.8.0",
+    "webpack-node-externals": "^2.5.2"
   }
 }
