@@ -12,12 +12,15 @@ const HOST = process.env.SERVER_HOST || "0.0.0.0";
 const BASE_PATH = process.env.BASE_PATH || "/blog";
 const STAGE = process.env.STAGE || "localdev";
 
-const NEXT_DIR = path.resolve(__dirname, "../.next");
-const NEXT_APP_ROOT = "/_next";
-
 // Create the server app.
 const getApp = async ({ basePath = "" } = {}) => {
-  const buildId = (await fs.readFile(path.join(NEXT_DIR, "BUILD_ID"))).toString().trim();
+  const NEXT_DIR = path.resolve(__dirname, "../.next");
+  const NEXT_DATA_DIR = path.resolve(NEXT_DIR, "serverless/pages");
+  const NEXT_APP_ROOT = "/_next";
+
+  const BUILD_ID = (await fs.readFile(path.join(NEXT_DIR, "BUILD_ID"))).toString().trim();
+  const NEXT_DATA_ROOT = `${NEXT_APP_ROOT}/data/${BUILD_ID}`;
+
   const app = express();
 
   // NOTE(STATIC): For this demo only, we just handle serve static content
@@ -25,13 +28,22 @@ const getApp = async ({ basePath = "" } = {}) => {
   // static contents to somewhere to be directly served by the CDN.
   app.use(`${NEXT_APP_ROOT}/static`, express.static(path.join(NEXT_DIR, "static")));
 
-  // Proxy data requests.
+  // Manually proxy JSON data requests to file system.
   // _next/data/y-BRZHyY6b_T25zMSRPY0/posts/ssg-ssr.json ->
   // _next/serverless/posts/ssg-ssr.json
-  app.use(
-    `${NEXT_APP_ROOT}/data/${buildId}`,
-    express.static(path.join(NEXT_DIR, "serverless/pages"))
-  );
+  //
+  // NOTE(STATIC): This _also_ could be uploaded to a real static serve.
+  // It technically _could_ change from data, so possibly disable SSG and
+  // make this always dynamically generated.
+  app.get(`${NEXT_DATA_ROOT}/*`, async (req, res, next) => {
+    // Only handle JSON.
+    if (req.url.endsWith(".json")) {
+      const filePath = req.url.replace(NEXT_DATA_ROOT, NEXT_DATA_DIR);
+      return res.sendFile(filePath);
+    }
+
+    return next();
+  });
 
   // Page handlers,
   app.all(`${basePath}`, (req, res) => {
