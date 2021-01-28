@@ -41,13 +41,15 @@
   },
   "dependencies": {
     "date-fns": "^2.11.1",
+    "express": "^4.17.1",
     "gray-matter": "^4.0.2",
     "next": "^10.0.0",
     "next-aws-lambda": "^2.5.1-alpha.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "remark": "^12.0.0",
-    "remark-html": "^12.0.0"
+    "remark-html": "^12.0.0",
+    "serverless-http": "^2.7.0"
   },
   "devDependencies": {
     "serverless": "^2.21.1",

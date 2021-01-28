@@ -70,3 +70,6 @@ functions:
       include:
         # Raw data for posts is read from disk outside `.next` build directory.
         - "posts/**/*.md"
+        # Static assets.
+        # TODO(STATIC): Add a note about this.
+        - ".next/static/**"

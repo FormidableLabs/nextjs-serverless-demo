@@ -1,5 +1,6 @@
 "use strict";
 
+// TODO: HERE -- Refactor to express with static.
 const { createServer } = require("http");
 
 const page = require("../.next/serverless/pages/index.js");
