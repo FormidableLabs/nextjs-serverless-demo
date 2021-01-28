@@ -53,7 +53,6 @@
   "devDependencies": {
     "serverless": "^2.21.1",
     "serverless-jetpack": "^0.10.7",
-    "serverless-offline": "^6.8.0",
-    "webpack-node-externals": "^2.5.2"
+    "serverless-offline": "^6.8.0"
   }
 }

@@ -12,13 +12,6 @@ module.exports = {
       // Keep `node_modules` as runtime requires to help slim down page bundles.
       config.externals = (config.externals || []).concat(
         nextExternals()
-        // TODO: REMOVE?
-        // nodeExternals({
-        //   allowlist: [
-        //     "next-plugin-loader?middleware=document-head-tags-server!",
-        //     /^next-plugin-loader.*/
-        //   ]
-        // })
       )
     }
 

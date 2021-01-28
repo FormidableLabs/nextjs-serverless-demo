@@ -58,7 +58,6 @@ const REQUEST_SKIP_LIST = [
 
   // This doesn't have an export and just patches Node.js `global`.
   "next/dist/next-server/server/node-polyfill-fetch"
-  // "next/dist/build/webpack/loaders/next-serverless-loader/page-handler"
 ];
 const getPackageFromRequest = (request = "") => {
   // Must start with a valid package prefix. Notably, not:
@@ -88,6 +87,11 @@ const getPackageFromRequest = (request = "") => {
 //
 // Modeled after: https://github.com/liady/webpack-node-externals
 // See: https://webpack.js.org/configuration/externals/#function
+//
+// Notes:
+// 1. **WARNING**: This is an incomplete solution for now. The list in
+//    REQUEST_SKIP_LIST need to be either generalized to "all webpack
+//    loaders" and/or configuration overrides need to be passed in as options.
 const nextExternals = () => (...args) => {
   // Handle all versions of webpack externals function signature.
   const isWebpack5 = !!(args[0] && args[0].context && args[0].request);
@@ -103,11 +107,6 @@ const nextExternals = () => (...args) => {
   if (externalName !== null) {
     return void callback(null, `commonjs ${externalName}`);
   }
-
-  // if (pkgName && !["next", "@next/env"].includes(pkgName)) {
-  //   console.log("TODO HERE EXTERNAL", { pkgName })
-  //   return void callback(null, `commonjs ${pkgName}`);
-  // }
 
   callback();
 };
