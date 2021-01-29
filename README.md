@@ -25,7 +25,8 @@ The main goals of this demo project are as follows:
 Some caveats:
 
 1. **Static files**: To make this demo a whole lot easier to develop/deploy, we handle serve static assets _from_ the Lambda. This is not what you should do for a real application. Typically, you'll want to stick those assets in an S3 bucket behind a CDN or something. Look for the `TODO(STATIC)` comments variously throughout this repository to see all the shortcuts you should unwind to then reconfigure for static assets "the right way".
-2. **Deployment URL**: We have the Next.js blog up at sub-path `/blog`. A consumer app may go instead for root and that would simplify some of the code we have in this repo to make all the dev + prod experience work the same.
+2. **Deployment URL base path**: We have the Next.js blog up at sub-path `/blog`. A consumer app may go instead for root and that would simplify some of the code we have in this repo to make all the dev + prod experience work the same.
+3. **Lambda SSR + CDN**: Our React SSR hasn't been tuned at all yet for caching in the CDN like a real world app would want to do.
 
 ## Local development
 
