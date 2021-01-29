@@ -21,7 +21,7 @@ and is based on the following projects:
 
 The main goals of this demo project are as follows:
 
-1. **Slim down a Next.js Lambda deployment**: The Next.js `target: "serverless"` Node.js outputs are huge. Like really, really big because **each page** contains **all the dependencies**. This project adds a custom externals handler to filter out almost all dependencies in `node_modules` and leave those as normal `require()` calls, thus dramatically decreasing the `pages` bundle sizes. The `node_modules` dependencies are included via `serverless-jetpack` trace mode to keep things tight.
+1. **Slim down a Next.js Lambda deployment**: The Next.js `target: "serverless"` Node.js outputs are huge. Like really, really big because **each page** contains **all the dependencies**. This project adds a [custom externals handler](./server/util.js) to filter out almost all dependencies in `node_modules` and leave those as normal `require()` calls, thus dramatically decreasing the `pages` bundle sizes. The `node_modules` dependencies are included via `serverless-jetpack` trace mode to keep things tight.
 
 
     If you want to see the difference, we've got an environment variable to skip the Node.js package external excludes, producing default bundles with tons of code per page. Try out the following to see (1) the size of the zip bundle and number of individual files in the zip, and a separate command to see (2) the size of the unzipped index page bundle.
