@@ -89,6 +89,8 @@ functions:
   # SCENARIO - base: The simplest, vanilla Serverless app.
   blog:
     handler: server/index.handler
+    environment:
+      APP_PATH: /blog
     events: # Use a generic proxy to allow Express app to route.
       - http: ANY /blog
       - http: 'ANY /blog/{proxy+}'

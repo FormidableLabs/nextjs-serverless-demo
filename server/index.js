@@ -9,19 +9,33 @@ const page = require("../.next/serverless/pages/index.js");
 const DEFAULT_PORT = 3000;
 const PORT = parseInt(process.env.SERVER_PORT || DEFAULT_PORT, 10);
 const HOST = process.env.SERVER_HOST || "0.0.0.0";
-const BASE_PATH = process.env.BASE_PATH || "/blog";
-const STAGE = process.env.STAGE || "localdev";
+
+// Set up base path for both Node.js and Lambda.
+const { STAGE, APP_PATH } = process.env;
+if (typeof STAGE === "undefined") {
+  throw new Error("STAGE is required");
+}
+if (typeof APP_PATH === "undefined") {
+  throw new Error("APP_PATH is required");
+}
+const BASE_PATH = `/${STAGE}${APP_PATH}`;
+process.env.BASE_PATH = BASE_PATH;
 
 // Create the server app.
-const getApp = async ({ basePath = "" } = {}) => {
+const getApp = async ({ appRoot = "" } = {}) => {
+  // Normalize appRoot.
+  appRoot = appRoot.replace(/\/*$/, "");
+
+  // Build stuff.
   const NEXT_DIR = path.resolve(__dirname, "../.next");
   const NEXT_DATA_DIR = path.resolve(NEXT_DIR, "serverless/pages");
   const NEXT_PUBLIC_DIR = path.resolve(__dirname, "../public");
-  const NEXT_APP_ROOT = "/_next";
+  const NEXT_APP_ROOT = `${appRoot}/_next`;
 
   const BUILD_ID = (await fs.readFile(path.join(NEXT_DIR, "BUILD_ID"))).toString().trim();
   const NEXT_DATA_ROOT = `${NEXT_APP_ROOT}/data/${BUILD_ID}`;
 
+  // Stage, base path stuff.
   const app = express();
 
   // NOTE(STATIC): For this demo only, we just handle serve static content
@@ -48,10 +62,10 @@ const getApp = async ({ basePath = "" } = {}) => {
 
   // Page handlers,
   // TODO(ROUTING): Need all the pages and routing.
-  app.all(`${basePath}`, (req, res) => page.render(req, res));
+  app.all(`${appRoot}/`, (req, res) => page.render(req, res));
 
   // NOTE(STATIC): User-added static assets. Should not be in Lambda.
-  app.use("/", express.static(NEXT_PUBLIC_DIR));
+  app.use(`${appRoot}/`, express.static(NEXT_PUBLIC_DIR));
 
   // TODO: 404.
   // TODO: Hook up error (?)
@@ -65,7 +79,7 @@ module.exports.handler = async (event, context) => {
   // Lazy require `serverless-http` to allow non-Lambda targets to omit.
   // eslint-disable-next-line global-require
   handler = handler || require("serverless-http")(await getApp({
-    basePath: BASE_PATH
+    appRoot: APP_PATH
   }));
 
   return handler(event, context);
@@ -74,7 +88,9 @@ module.exports.handler = async (event, context) => {
 // DOCKER/DEV/ANYTHING: Start the server directly.
 if (require.main === module) {
   (async () => {
-    const server = (await getApp()).listen({
+    const server = (await getApp({
+      appRoot: BASE_PATH
+    })).listen({
       port: PORT,
       host: HOST
     }, () => {
