@@ -17,10 +17,38 @@ and is based on the following projects:
 - [nextjs-fargate-demo](https://github.com/FormidableLabs/nextjs-fargate-demo): We deploy the same Next.js application.
 - [aws-lambda-serverless-reference][]: The CloudFormation/Terraform infrastructure approach is basically identical to our reference Serverless project.
 
+### Goals
+
 The main goals of this demo project are as follows:
 
 1. **Slim down a Next.js Lambda deployment**: The Next.js `target: "serverless"` Node.js outputs are huge. Like really, really big because **each page** contains **all the dependencies**. This project adds a custom externals handler to filter out almost all dependencies in `node_modules` and leave those as normal `require()` calls, thus dramatically decreasing the `pages` bundle sizes. The `node_modules` dependencies are included via `serverless-jetpack` trace mode to keep things tight.
+
+
+    If you want to see the difference, we've got an environment variable to skip the Node.js package external excludes, producing default bundles with tons of code per page. Try out the following to see (1) the size of the zip bundle and number of individual files in the zip, and a separate command to see (2) the size of the unzipped index page bundle.
+
+    ```sh
+    # Slimmer with packages in real node_modules and not bundle.
+    $ yarn clean && yarn build && yarn lambda:sls package --report
+    $ du -sh .serverless/blog.zip && zipinfo .serverless/blog.zip | wc -l
+    2.1M	.serverless/blog.zip
+    1241
+    $ du -sh .next/serverless/pages/index.js
+    52K	.next/serverless/pages/index.js
+
+    # Bigger with packages in each page bundle
+    $ yarn clean && NEXT_SKIP_EXTERNALS=true yarn build && yarn lambda:sls package --report
+    $ du -sh .serverless/blog.zip && zipinfo .serverless/blog.zip | wc -l
+    4.0M	.serverless/blog.zip
+    293
+    $ du -sh .next/serverless/pages/index.js
+    2.7M	.next/serverless/pages/index.js
+    ```
+
+    > ℹ️ **Note**: For a full optimization we'd probably want to see if we could split out application code that is shared across pages as well. For now, we're avoiding a big chunk of `node_modules`, which has a good punch for just 3 actual pages (plus supporting boilerplate).
+
 2. **Single Lambda/APIGW proxy**: `TODO(ROUTING): INSERT_NOTES`
+
+### Caveats
 
 Some caveats:
 
