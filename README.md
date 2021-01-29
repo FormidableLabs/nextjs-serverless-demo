@@ -48,17 +48,18 @@ and visit: http://127.0.0.1:3000/
 This uses `serverless-offline` to simulate the application running on Lambda.
 
 ```sh
+$ yarn build
 $ yarn lambda:localdev
 ```
 
 and visit: http://127.0.0.1:4000/localdev/blog/
 
-### Next.js Production server
+### Next.js production server
 
 This repo _doesn't_ use the prod server, but if you want to create it, here you go:
 
 ```sh
-$ yarn build
+$ yarn clean && yarn build
 $ yarn start
 ```
 

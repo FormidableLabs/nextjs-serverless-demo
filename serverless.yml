@@ -85,6 +85,12 @@ provider:
     Stage: ${self:custom.stage}
     Service: ${self:custom.service}
 
+  # TODO(HERE): This doesn't work yet with serverless-offline.
+  # TODO(STATIC): Allows serving of binary media. Shouldn't use this for real.
+  apiGateway:
+    binaryMediaTypes:
+      - "*/*"
+
 functions:
   # SCENARIO - base: The simplest, vanilla Serverless app.
   blog:
