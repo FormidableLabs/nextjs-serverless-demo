@@ -35,33 +35,50 @@ Start with:
 $ yarn install
 ```
 
-### Next.js Development server
+Then we provide a lot of different ways to develop the server. Here is a table of options with current working status:
+
+| Command           | Status | URL                                            |
+| ----------------- | ------ | ---------------------------------------------- |
+| `dev`             | works  | http://127.0.0.1:3000/blog/                    |
+|                   | works  | http://127.0.0.1:3000/blog/posts/ssg-ssr       |
+| `start`           | works  | http://127.0.0.1:4000/blog/                    |
+|                   | fails  | http://127.0.0.1:4000/blog/posts/ssg-ssr       |
+| `lambda:localdev` | works  | http://127.0.0.1:4000/blog/                    |
+|                   | fails  | http://127.0.0.1:4000/blog/posts/ssg-ssr       |
+| _deployed_        | works  | https://nextjs-sls-sandbox.formidable.dev/blog/ |
+|                   | fails  | https://nextjs-sls-sandbox.formidable.dev/blog/posts/ssg-ssr |
+
+### Next.js Development server (3000)
+
+The built-in Next.js dev server, compilation and all.
 
 ```sh
 $ yarn dev
 ```
 
-and visit: http://127.0.0.1:3000/
+and visit: http://127.0.0.1:3000/blog/
 
-### Serverless development server
+###  Node.js production server (4000)
 
-This uses `serverless-offline` to simulate the application running on Lambda.
-
-```sh
-$ yarn build
-$ yarn lambda:localdev
-```
-
-and visit: http://127.0.0.1:4000/localdev/blog/
-
-### Next.js production server
-
-This repo _doesn't_ use the prod server, but if you want to create it, here you go:
+We have a Node.js custom `express` server that uses _almost_ all of the Lambda code, which is sometimes an easier development experience that `serverless-offline`. This also could theoretically serve as a real production server on a bare metal or containerized compute instance outside of Lambda.
 
 ```sh
 $ yarn clean && yarn build
 $ yarn start
 ```
+
+and visit: http://127.0.0.1:4000/blog/
+
+### Lambda development server (5000)
+
+This uses `serverless-offline` to simulate the application running on Lambda.
+
+```sh
+$ yarn clean && yarn build
+$ yarn lambda:localdev
+```
+
+and visit: http://127.0.0.1:5000/blog/
 
 ## Deployment
 
@@ -199,9 +216,11 @@ $ STAGE=sandbox aws-vault exec FIRST.LAST-admin -- \
 
 See the [aws-lambda-serverless-reference][] docs for additional Serverless/Lambda (`yarn lambda:*`) tasks you can run.
 
-`yarn lambda:info` gives the current APIGW endpoints. As a useful helper we've separately hooked up a custom domain for `STAGE=sandbox` at:
+As a useful helper we've separately hooked up a custom domain for `STAGE=sandbox` at:
 
 https://nextjs-sls-sandbox.formidable.dev/blog/
+
+> ℹ️ **Note**: We set `BASE_PATH` to `/blog` and _not_ `/${STAGE}/blog` like API Gateway does for internal endpoints for our references to other static assets. It's kind of a moot point because frontend assets shouldn't be served via Lambda/APIGW like we do for this demo, but just worth noting that the internal endpoints will have incorrect asset paths.
 
 [aws-lambda-serverless-reference]: https://github.com/FormidableLabs/aws-lambda-serverless-reference
 [aws-vault]: https://github.com/99designs/aws-vault

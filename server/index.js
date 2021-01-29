@@ -6,25 +6,20 @@ const express = require("express");
 
 const page = require("../.next/serverless/pages/index.js");
 
-const DEFAULT_PORT = 3000;
+const DEFAULT_PORT = 4000;
 const PORT = parseInt(process.env.SERVER_PORT || DEFAULT_PORT, 10);
 const HOST = process.env.SERVER_HOST || "0.0.0.0";
 
 // Set up base path for both Node.js and Lambda.
-const { STAGE, APP_PATH } = process.env;
-if (typeof STAGE === "undefined") {
-  throw new Error("STAGE is required");
+const { BASE_PATH } = process.env;
+if (typeof BASE_PATH === "undefined") {
+  throw new Error("BASE_PATH is required");
 }
-if (typeof APP_PATH === "undefined") {
-  throw new Error("APP_PATH is required");
-}
-const BASE_PATH = `/${STAGE}${APP_PATH}`;
-process.env.BASE_PATH = BASE_PATH;
 
 // Create the server app.
-const getApp = async ({ appRoot = "" } = {}) => {
+const getApp = async () => {
   // Normalize appRoot.
-  appRoot = appRoot.replace(/\/*$/, "");
+  const appRoot = BASE_PATH.replace(/\/*$/, "");
 
   // Build stuff.
   const NEXT_DIR = path.resolve(__dirname, "../.next");
@@ -79,9 +74,7 @@ module.exports.handler = async (event, context) => {
   // Lazy require `serverless-http` to allow non-Lambda targets to omit.
   // eslint-disable-next-line global-require
   handler = handler || require("serverless-http")(
-    await getApp({
-      appRoot: APP_PATH
-    }),
+    await getApp(),
     // TODO(STATIC): Again, shouldn't be serving images from the Lambda :)
     {
       binary: ["image/*"]
@@ -94,9 +87,7 @@ module.exports.handler = async (event, context) => {
 // DOCKER/DEV/ANYTHING: Start the server directly.
 if (require.main === module) {
   (async () => {
-    const server = (await getApp({
-      appRoot: BASE_PATH
-    })).listen({
+    const server = (await getApp()).listen({
       port: PORT,
       host: HOST
     }, () => {
