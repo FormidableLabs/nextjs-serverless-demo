@@ -43,8 +43,8 @@ Then we provide a lot of different ways to develop the server. Here is a table o
 |                   | works  | http://127.0.0.1:3000/blog/posts/ssg-ssr       |
 | `start`           | works  | http://127.0.0.1:4000/blog/                    |
 |                   | fails  | http://127.0.0.1:4000/blog/posts/ssg-ssr       |
-| `lambda:localdev` | works  | http://127.0.0.1:4000/blog/                    |
-|                   | fails  | http://127.0.0.1:4000/blog/posts/ssg-ssr       |
+| `lambda:localdev` | works  | http://127.0.0.1:5000/blog/                    |
+|                   | fails  | http://127.0.0.1:5000/blog/posts/ssg-ssr       |
 | _deployed_        | works  | https://nextjs-sls-sandbox.formidable.dev/blog/ |
 |                   | fails  | https://nextjs-sls-sandbox.formidable.dev/blog/posts/ssg-ssr |
 
@@ -201,7 +201,7 @@ is required (to effect the underlying CloudFormation changes).
 
 ```sh
 # Build for production.
-$ STAGE=sandbox yarn build
+$ yarn clean && yarn build
 
 # Deploy
 $ STAGE=sandbox aws-vault exec FIRST.LAST-admin -- \
