@@ -64,7 +64,7 @@ const getApp = async ({ appRoot = "" } = {}) => {
   // TODO(ROUTING): Need all the pages and routing.
   app.all(`${appRoot}/`, (req, res) => page.render(req, res));
 
-  // NOTE(STATIC): User-added static assets. Should not be in Lambda.
+  // TODO(STATIC): User-added static assets. Should not be in Lambda.
   app.use(`${appRoot}/`, express.static(NEXT_PUBLIC_DIR));
 
   // TODO: 404.
