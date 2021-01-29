@@ -38,7 +38,7 @@ const getApp = async ({ appRoot = "" } = {}) => {
   // Stage, base path stuff.
   const app = express();
 
-  // NOTE(STATIC): For this demo only, we just handle serve static content
+  // TODO(STATIC): For this demo only, we just handle serve static content
   // directly through the express app. For a real app, you'll want to deploy
   // static contents to somewhere to be directly served by the CDN.
   app.use(`${NEXT_APP_ROOT}/static`, express.static(path.join(NEXT_DIR, "static")));
@@ -47,7 +47,7 @@ const getApp = async ({ appRoot = "" } = {}) => {
   // _next/data/y-BRZHyY6b_T25zMSRPY0/posts/ssg-ssr.json ->
   // _next/serverless/posts/ssg-ssr.json
   //
-  // NOTE(STATIC): This _also_ could be uploaded to a real static serve.
+  // TODO(STATIC): This _also_ could be uploaded to a real static serve.
   // It technically _could_ change from data, so possibly disable SSG and
   // make this always dynamically generated.
   app.get(`${NEXT_DATA_ROOT}/*`, (req, res, next) => {
@@ -78,9 +78,15 @@ let handler;
 module.exports.handler = async (event, context) => {
   // Lazy require `serverless-http` to allow non-Lambda targets to omit.
   // eslint-disable-next-line global-require
-  handler = handler || require("serverless-http")(await getApp({
-    appRoot: APP_PATH
-  }));
+  handler = handler || require("serverless-http")(
+    await getApp({
+      appRoot: APP_PATH
+    }),
+    // TODO(STATIC): Again, shouldn't be serving images from the Lambda :)
+    {
+      binary: ["image/*"]
+    }
+  );
 
   return handler(event, context);
 };
