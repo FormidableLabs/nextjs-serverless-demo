@@ -5,11 +5,16 @@ const path = require("path");
 const express = require("express");
 
 const page = require("../.next/serverless/pages/index.js");
+const manifests = {
+  routes: require("../.next/routes-manifest.json"),
+  pages: require("../.next/serverless/pages-manifest.json")
+};
 
 const DEFAULT_PORT = 4000;
 const PORT = parseInt(process.env.SERVER_PORT || DEFAULT_PORT, 10);
 const HOST = process.env.SERVER_HOST || "0.0.0.0";
 
+// TODO: REMOVE THIS AND USE MANIFEST???
 // Set up base path for both Node.js and Lambda.
 const { BASE_PATH } = process.env;
 if (typeof BASE_PATH === "undefined") {
@@ -29,6 +34,13 @@ const getApp = async () => {
 
   const BUILD_ID = (await fs.readFile(path.join(NEXT_DIR, "BUILD_ID"))).toString().trim();
   const NEXT_DATA_ROOT = `${NEXT_APP_ROOT}/data/${BUILD_ID}`;
+
+  console.log("TOOD HERE", JSON.stringify({
+    appRoot,
+    NEXT_APP_ROOT,
+    NEXT_DATA_ROOT,
+    manifests
+  }, null, 2));
 
   // Stage, base path stuff.
   const app = express();

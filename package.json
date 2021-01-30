@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "serverless": "^2.21.1",
-    "serverless-jetpack": "^0.10.7",
+    "serverless-jetpack": "^0.10.8",
     "serverless-offline": "^6.8.0"
   }
 }

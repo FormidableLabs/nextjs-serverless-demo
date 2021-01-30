@@ -16,9 +16,6 @@ custom:
         # Provided on Lambda
         - "aws-sdk"
 
-        # TODO(trace-deps): Remove once in trace-deps
-        - "critters"
-
         # Ignore real deps in Next.js that we shouldn't need at runtime.
         - "webpack"
         - "sass-loader"
@@ -28,9 +25,6 @@ custom:
         - "next-plugin-loader?middleware=document-head-tags-server!"
 
       allowMissing:
-        # TODO(trace-deps): Add to trace-deps
-        # "./.next/serverless/pages/index.js":
-        #   - "critters" # For CSS optimization
         "node-fetch":
           - "encoding"
         "next":

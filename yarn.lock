@@ -7519,10 +7519,10 @@ serverless-http@^2.7.0:
   optionalDependencies:
     "@types/aws-lambda" "^8.10.56"
 
-serverless-jetpack@^0.10.7:
-  version "0.10.7"
-  resolved "https://registry.yarnpkg.com/serverless-jetpack/-/serverless-jetpack-0.10.7.tgz#2eadba6b66807224bf05e447247bbdea6bc2a7c8"
-  integrity sha512-Ra/6Swp86fGq7XxCyhQMVpCA+EYjdmJnClNBK2aQoSzDSc9c7iQ6J/5RG6RjcgDRp1K/oNbMkhgLfQjyJuKfHw==
+serverless-jetpack@^0.10.8:
+  version "0.10.8"
+  resolved "https://registry.yarnpkg.com/serverless-jetpack/-/serverless-jetpack-0.10.8.tgz#61ddc35a9562b2ce287a079afa8ce8ca68fbedf9"
+  integrity sha512-QlDoC7RMD791KptkD1/mDJfH+x07iuy/qnWitEAIfPO/2SlDOxFknZqB/eG3bdIRCCjYCuqT/ffbXt9ysmWNuw==
   dependencies:
     archiver "^3.1.1"
     globby "^9.2.0"
@@ -7531,7 +7531,7 @@ serverless-jetpack@^0.10.7:
     make-dir "^3.0.2"
     nanomatch "^1.2.13"
     p-limit "^2.3.0"
-    trace-deps "^0.3.3"
+    trace-deps "^0.3.8"
 
 serverless-offline@^6.8.0:
   version "6.8.0"
@@ -8504,10 +8504,10 @@ tr46@^1.0.1:
   dependencies:
     punycode "^2.1.0"
 
-trace-deps@^0.3.3:
-  version "0.3.7"
-  resolved "https://registry.yarnpkg.com/trace-deps/-/trace-deps-0.3.7.tgz#940a1c4358dfda2fdd3e3f2c51563d7b69628ee2"
-  integrity sha512-R4scNNMV/+/l+pbPHvF6mmh4/4UnAT4GwGr8ColzlaqJwroLtxbg0xHEC7fFoKcKXxKepAion+nry7fy9Nq0Tg==
+trace-deps@^0.3.8:
+  version "0.3.8"
+  resolved "https://registry.yarnpkg.com/trace-deps/-/trace-deps-0.3.8.tgz#efb8d55087e96cfbae457c9176e9e2144b8acff2"
+  integrity sha512-VXRdVSmduxemn2y0HzPZiw2zMEMmiNytHb3xSdV/FHFYoO8LAJ4sY1cvP1lDyrPIJDb5wxp30eno8nbE32SjzA==
   dependencies:
     acorn-node "^2.0.1"
     resolve "^1.19.0"
