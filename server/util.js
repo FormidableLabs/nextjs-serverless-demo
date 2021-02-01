@@ -67,6 +67,7 @@ const getPackageFromRequest = (request = "") => {
     return null;
   }
 
+  // TODO: Can we just infer all loaders/plugins that are needed at build-time?
   // Skip Next.js loaders and things that need to be built in.
   if (REQUEST_SKIP_LIST.some(
     (strOrRe) => typeof strOrRe === "string" ? request.startsWith(strOrRe) : strOrRe.test(request)
