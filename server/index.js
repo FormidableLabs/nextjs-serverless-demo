@@ -4,7 +4,6 @@ const fs = require("fs").promises;
 const path = require("path");
 const express = require("express");
 
-const page = require("../.next/serverless/pages/index.js");
 const manifests = {
   routes: require("../.next/routes-manifest.json"),
   pages: require("../.next/serverless/pages-manifest.json")
@@ -21,29 +20,42 @@ if (typeof BASE_PATH === "undefined") {
   throw new Error("BASE_PATH is required");
 }
 
+// Next locations.
+const NEXT_DIR = path.resolve(__dirname, "../.next");
+const NEXT_SLS_DIR = path.join(NEXT_DIR, "serverless");
+const NEXT_PAGES_DIR = path.join(NEXT_SLS_DIR, "pages");
+const NEXT_PUBLIC_DIR = path.resolve(__dirname, "../public");
+
+// Send response.
+const sendPage = ({ pagePath, req, res }) => {
+  const fullPath = path.join(NEXT_SLS_DIR, pagePath);
+  if (fullPath.endsWith(".html")) {
+    return res.sendFile(fullPath);
+  }
+
+  if (fullPath.endsWith(".js")) {
+    const page = require(fullPath);
+    return page.render(req, res);
+  }
+
+  throw new Error(`Unknown page format: ${pagePath}`);
+};
+
 // Create the server app.
 const getApp = async () => {
   // Normalize appRoot.
   const appRoot = BASE_PATH.replace(/\/*$/, "");
 
   // Build stuff.
-  const NEXT_DIR = path.resolve(__dirname, "../.next");
-  const NEXT_DATA_DIR = path.resolve(NEXT_DIR, "serverless/pages");
-  const NEXT_PUBLIC_DIR = path.resolve(__dirname, "../public");
   const NEXT_APP_ROOT = `${appRoot}/_next`;
-
   const BUILD_ID = (await fs.readFile(path.join(NEXT_DIR, "BUILD_ID"))).toString().trim();
   const NEXT_DATA_ROOT = `${NEXT_APP_ROOT}/data/${BUILD_ID}`;
 
-  console.log("TOOD HERE", JSON.stringify({
-    appRoot,
-    NEXT_APP_ROOT,
-    NEXT_DATA_ROOT,
-    manifests
-  }, null, 2));
-
   // Stage, base path stuff.
   const app = express();
+
+  // Development tweaks.
+  app.set("json spaces", 2);
 
   // TODO(STATIC): For this demo only, we just handle serve static content
   // directly through the express app. For a real app, you'll want to deploy
@@ -60,7 +72,7 @@ const getApp = async () => {
   app.get(`${NEXT_DATA_ROOT}/*`, (req, res, next) => {
     // Only handle JSON.
     if (req.url.endsWith(".json")) {
-      const filePath = req.url.replace(NEXT_DATA_ROOT, NEXT_DATA_DIR);
+      const filePath = req.url.replace(NEXT_DATA_ROOT, NEXT_PAGES_DIR);
       return res.sendFile(filePath);
     }
 
@@ -68,14 +80,47 @@ const getApp = async () => {
   });
 
   // Page handlers,
-  // TODO(ROUTING): Need all the pages and routing.
-  app.all(`${appRoot}/`, (req, res) => page.render(req, res));
+  app.all(`${appRoot}(/*)?`, (req, res, next) => {
+    // Remove app root or switch to root ("/").
+    const relPath = req.url.replace(appRoot, "") || "/";
+
+    // Direct page match
+    let pagePath = manifests.pages[relPath];
+
+    // Dynamic routes
+    manifests.routes.dynamicRoutes.forEach(({ page, namedRegex }) => {
+      if (!pagePath && new RegExp(namedRegex).exec(relPath)) {
+        pagePath = manifests.pages[page];
+      }
+    });
+
+    // Render
+    if (pagePath) {
+      return sendPage({ pagePath, req, res });
+    }
+
+    return next();
+  });
 
   // TODO(STATIC): User-added static assets. Should not be in Lambda.
   app.use(`${appRoot}/`, express.static(NEXT_PUBLIC_DIR));
 
-  // TODO: 404.
-  // TODO: Hook up error (?)
+  // Not found handling.
+  app.use((req, res) => sendPage({
+    pagePath: manifests.pages["/404"],
+    req,
+    res: res.status(404)
+  }));
+
+  // Error handler.
+  app.use((err, req, res, next) => {
+    console.error(err.stack);
+    return sendPage({
+      pagePath: manifests.pages["/_error"],
+      req,
+      res: res.status(500)
+    });
+  });
 
   return app;
 };
