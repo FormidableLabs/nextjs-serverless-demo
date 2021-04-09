@@ -33,6 +33,9 @@ custom:
 
       dynamic:
         resolutions:
+          # Our server does lazy requires of pages.
+          "./server/index.js": []
+
           # [169:22]: require(`./transformers/${Transformer}.js`)
           "@ampproject/toolbox-optimizer/lib/DomTransformer.js": []
 
@@ -94,6 +97,10 @@ functions:
       - http: ANY /blog
       - http: 'ANY /blog/{proxy+}'
     package:
+      trace:
+        include:
+          # Next.js-generated files: gather dependencies
+          - ".next/serverless/**/*.js"
       include:
         # Raw data for posts is read from disk outside `.next` build directory.
         - "posts/**/*.md"

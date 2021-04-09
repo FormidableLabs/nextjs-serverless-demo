@@ -22,10 +22,11 @@ module.exports = {
       // Add more information in the bundle.
       config.output.pathinfo = true;
 
-      // Keep `node_modules` as runtime requires to help slim down page bundles.
-      config.externals = (config.externals || []).concat(
-        NEXT_SKIP_EXTERNALS === "true" ? [] : nextExternals()
-      );
+      // TODO: Replace with `webpack-next-externals` when ready.
+      // // Keep `node_modules` as runtime requires to help slim down page bundles.
+      // config.externals = (config.externals || []).concat(
+      //   NEXT_SKIP_EXTERNALS === "true" ? [] : nextExternals()
+      // );
     }
 
     return config;

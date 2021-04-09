@@ -888,9 +888,9 @@
     "@types/unist" "*"
 
 "@types/minimatch@*":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
-  integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.4.tgz#f0ec25dbf2f0e4b18647313ac031134ca5b24b21"
+  integrity sha512-1z8k4wzFnNjVK/tlxvrWuK5WMt6mydWWP7+zvH5eFep4oj+UkrfiJTRtjCeBXNpwaA/FYqqtb4/QS4ianFpIRA==
 
 "@types/node@*":
   version "14.14.22"
@@ -4636,7 +4636,7 @@ is-ci@^2.0.0:
   dependencies:
     ci-info "^2.0.0"
 
-is-core-module@^2.1.0:
+is-core-module@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.2.0.tgz#97037ef3d52224d85163f5597b2b63d9afed981a"
   integrity sha512-XRAfAdyyY5F5cOXn7hYQDqh2Xmii+DEfIcQGxK/uNwMHhIkPWO0g8msXcbzLe+MpGoR951MlqM/2iIlU4vKDdQ==
@@ -7240,11 +7240,11 @@ resolve-url@^0.2.1:
   integrity sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
 
 resolve@^1.19.0:
-  version "1.19.0"
-  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.19.0.tgz#1af5bf630409734a067cae29318aac7fa29a267c"
-  integrity sha512-rArEXAgsBG4UgRGcynxWIWKFvh/XZCcS8UJdHhwy91zwAvCZIbcs+vAbflgBnNjYMs/i/i+/Ux6IZhML1yPvxg==
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.20.0.tgz#629a013fb3f70755d6f0b7935cc1c2c5378b1975"
+  integrity sha512-wENBPt4ySzg4ybFQW2TT1zMQucPK95HSh/nq2CFTZVOGut2+pQvSsgtda4d26YrYcr067wjbmzOG8byDPBX63A==
   dependencies:
-    is-core-module "^2.1.0"
+    is-core-module "^2.2.0"
     path-parse "^1.0.6"
 
 responselike@1.0.2, responselike@^1.0.2:
@@ -8505,9 +8505,9 @@ tr46@^1.0.1:
     punycode "^2.1.0"
 
 trace-deps@^0.3.8:
-  version "0.3.8"
-  resolved "https://registry.yarnpkg.com/trace-deps/-/trace-deps-0.3.8.tgz#efb8d55087e96cfbae457c9176e9e2144b8acff2"
-  integrity sha512-VXRdVSmduxemn2y0HzPZiw2zMEMmiNytHb3xSdV/FHFYoO8LAJ4sY1cvP1lDyrPIJDb5wxp30eno8nbE32SjzA==
+  version "0.3.9"
+  resolved "https://registry.yarnpkg.com/trace-deps/-/trace-deps-0.3.9.tgz#85714d19444d67bd28bc9447919fa68655f744ef"
+  integrity sha512-85uDbKTm4ygcLCcnHO7FfchgrXi24s5bLloptSx565kblrv9lbaBi/bnWLEkLk2FHEC7m0BJb4QoOoshoSs9LQ==
   dependencies:
     acorn-node "^2.0.1"
     resolve "^1.19.0"
