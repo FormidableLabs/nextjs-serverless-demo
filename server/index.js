@@ -1,12 +1,14 @@
 "use strict";
 
+const { parse } = require("url");
 const fs = require("fs").promises;
 const path = require("path");
 const express = require("express");
+const next = require("next");
 
 const manifests = {
   routes: require("../.next/routes-manifest.json"),
-  pages: require("../.next/serverless/pages-manifest.json")
+  pages: require("../.next/server/pages-manifest.json")
 };
 
 const DEFAULT_PORT = 4000;
@@ -22,13 +24,13 @@ if (typeof BASE_PATH === "undefined") {
 
 // Next locations.
 const NEXT_DIR = path.resolve(__dirname, "../.next");
-const NEXT_SLS_DIR = path.join(NEXT_DIR, "serverless");
-const NEXT_PAGES_DIR = path.join(NEXT_SLS_DIR, "pages");
+const NEXT_SERVER_DIR = path.join(NEXT_DIR, "server");
+const NEXT_PAGES_DIR = path.join(NEXT_SERVER_DIR, "pages");
 const NEXT_PUBLIC_DIR = path.resolve(__dirname, "../public");
 
 // Send response.
 const sendPage = ({ pagePath, req, res }) => {
-  const fullPath = path.join(NEXT_SLS_DIR, pagePath);
+  const fullPath = path.join(NEXT_SERVER_DIR, pagePath);
   if (fullPath.endsWith(".html")) {
     return res.sendFile(fullPath);
   }
@@ -43,8 +45,13 @@ const sendPage = ({ pagePath, req, res }) => {
 
 // Create the server app.
 const getApp = async () => {
+  const nextApp = next({ dev: false });
+  await nextApp.prepare();
+  const nextHandler = nextApp.getRequestHandler();
+
   // Normalize appRoot.
-  const appRoot = BASE_PATH.replace(/\/*$/, "");
+  // const appRoot = BASE_PATH.replace(/\/*$/, "");
+  const appRoot = "";
 
   // Build stuff.
   const NEXT_APP_ROOT = `${appRoot}/_next`;
@@ -62,9 +69,12 @@ const getApp = async () => {
   // static contents to somewhere to be directly served by the CDN.
   app.use(`${NEXT_APP_ROOT}/static`, express.static(path.join(NEXT_DIR, "static")));
 
+
+  // TODO(SERVER): NEED THIS?
+  //
   // Manually proxy JSON data requests to file system.
   // _next/data/y-BRZHyY6b_T25zMSRPY0/posts/ssg-ssr.json ->
-  // _next/serverless/posts/ssg-ssr.json
+  // _next/server/posts/ssg-ssr.json
   //
   // TODO(STATIC): This _also_ could be uploaded to a real static serve.
   // It technically _could_ change from data, so possibly disable SSG and
@@ -83,23 +93,9 @@ const getApp = async () => {
   app.all(`${appRoot}(/*)?`, (req, res, next) => {
     // Remove app root or switch to root ("/").
     const relPath = req.url.replace(appRoot, "") || "/";
+    const parsedUrl = parse(relPath, true);
 
-    // Direct page match
-    let pagePath = manifests.pages[relPath];
-
-    // Dynamic routes
-    manifests.routes.dynamicRoutes.forEach(({ page, namedRegex }) => {
-      if (!pagePath && new RegExp(namedRegex).exec(relPath)) {
-        pagePath = manifests.pages[page];
-      }
-    });
-
-    // Render
-    if (pagePath) {
-      return sendPage({ pagePath, req, res });
-    }
-
-    return next();
+    return nextHandler(req, res, parsedUrl);
   });
 
   // TODO(STATIC): User-added static assets. Should not be in Lambda.
