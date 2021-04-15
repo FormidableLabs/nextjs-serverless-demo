@@ -15,6 +15,7 @@ const DEFAULT_PORT = 4000;
 const PORT = parseInt(process.env.SERVER_PORT || DEFAULT_PORT, 10);
 const HOST = process.env.SERVER_HOST || "0.0.0.0";
 
+// TODO(SERVER): Remove BASE_PATH altogether?
 // Set up base path for both Node.js and Lambda.
 let { BASE_PATH } = process.env;
 if (typeof BASE_PATH === "undefined") {
@@ -96,13 +97,12 @@ const getApp = async () => {
   // Page handlers,
   app.use((req, res) => {
     // Patch req.
-    const parsedUrl = parse(req.url.replace(BASE_PATH, "") || "/", true);
+    const parsedUrl = parse(req.url, true);
 
     console.log(JSON.stringify({
       msg: "TODO REMOVE SERVER ROUTES",
       url: req.url,
-      _nextHadBasePath: req._nextHadBasePath,
-      parsedUrlRef: parsedUrl.href
+      _nextHadBasePath: req._nextHadBasePath
     }, null, 2))
 
     return nextHandler(req, res, parsedUrl);
