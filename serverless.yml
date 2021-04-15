@@ -113,11 +113,12 @@ functions:
     events: # Use a generic proxy to allow Express app to route.
       - http: ANY /blog
       - http: 'ANY /blog/{proxy+}'
-    package:
+    jetpack:
       trace:
         include:
           # Next.js-generated files: gather dependencies
           - ".next/server/**/*.js"
+    package:
       include:
         # Raw data for posts is read from disk outside `.next` build directory.
         - "posts/**/*.md"

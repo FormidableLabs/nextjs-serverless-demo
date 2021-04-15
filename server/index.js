@@ -69,7 +69,6 @@ const getApp = async () => {
   // static contents to somewhere to be directly served by the CDN.
   app.use(`${NEXT_APP_ROOT}/static`, express.static(path.join(NEXT_DIR, "static")));
 
-
   // TODO(SERVER): NEED THIS?
   //
   // Manually proxy JSON data requests to file system.
@@ -94,6 +93,12 @@ const getApp = async () => {
     // Remove app root or switch to root ("/").
     const relPath = req.url.replace(appRoot, "") || "/";
     const parsedUrl = parse(relPath, true);
+
+    console.log(JSON.stringify({
+      msg: "TODO REMOVE ROUTES",
+      relPath,
+      parsedUrl
+    }, null, 2))
 
     return nextHandler(req, res, parsedUrl);
   });
