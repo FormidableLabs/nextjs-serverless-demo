@@ -15,33 +15,36 @@ const DEFAULT_PORT = 4000;
 const PORT = parseInt(process.env.SERVER_PORT || DEFAULT_PORT, 10);
 const HOST = process.env.SERVER_HOST || "0.0.0.0";
 
-// TODO: REMOVE THIS AND USE MANIFEST???
 // Set up base path for both Node.js and Lambda.
-const { BASE_PATH } = process.env;
+let { BASE_PATH } = process.env;
 if (typeof BASE_PATH === "undefined") {
   throw new Error("BASE_PATH is required");
 }
 
-// Next locations.
-const NEXT_DIR = path.resolve(__dirname, "../.next");
-const NEXT_SERVER_DIR = path.join(NEXT_DIR, "server");
-const NEXT_PAGES_DIR = path.join(NEXT_SERVER_DIR, "pages");
-const NEXT_PUBLIC_DIR = path.resolve(__dirname, "../public");
+// Normalize base path.
+BASE_PATH = BASE_PATH.replace(/\/*$/, "");
 
-// Send response.
-const sendPage = ({ pagePath, req, res }) => {
-  const fullPath = path.join(NEXT_SERVER_DIR, pagePath);
-  if (fullPath.endsWith(".html")) {
-    return res.sendFile(fullPath);
-  }
+// TODO(SERVER): REMOVE?
+// // Next locations.
+// const NEXT_DIR = path.resolve(__dirname, "../.next");
+// const NEXT_SERVER_DIR = path.join(NEXT_DIR, "server");
+// const NEXT_PAGES_DIR = path.join(NEXT_SERVER_DIR, "pages");
+// const NEXT_PUBLIC_DIR = path.resolve(__dirname, "../public");
 
-  if (fullPath.endsWith(".js")) {
-    const page = require(fullPath);
-    return page.render(req, res);
-  }
+// // Send response.
+// const sendPage = ({ pagePath, req, res }) => {
+//   const fullPath = path.join(NEXT_SERVER_DIR, pagePath);
+//   if (fullPath.endsWith(".html")) {
+//     return res.sendFile(fullPath);
+//   }
 
-  throw new Error(`Unknown page format: ${pagePath}`);
-};
+//   if (fullPath.endsWith(".js")) {
+//     const page = require(fullPath);
+//     return page.render(req, res);
+//   }
+
+//   throw new Error(`Unknown page format: ${pagePath}`);
+// };
 
 // Create the server app.
 const getApp = async () => {
@@ -49,14 +52,15 @@ const getApp = async () => {
   await nextApp.prepare();
   const nextHandler = nextApp.getRequestHandler();
 
-  // Normalize appRoot.
-  // const appRoot = BASE_PATH.replace(/\/*$/, "");
-  const appRoot = "";
-
+  // TODO(SERVER): REMOVE?
+  // // Normalize appRoot.
+  // // const appRoot = BASE_PATH.replace(/\/*$/, "");
+  // const appRoot = "";
+  //
   // Build stuff.
-  const NEXT_APP_ROOT = `${appRoot}/_next`;
-  const BUILD_ID = (await fs.readFile(path.join(NEXT_DIR, "BUILD_ID"))).toString().trim();
-  const NEXT_DATA_ROOT = `${NEXT_APP_ROOT}/data/${BUILD_ID}`;
+  // const NEXT_APP_ROOT = `${appRoot}/_next`;
+  // const BUILD_ID = (await fs.readFile(path.join(NEXT_DIR, "BUILD_ID"))).toString().trim();
+  // const NEXT_DATA_ROOT = `${NEXT_APP_ROOT}/data/${BUILD_ID}`;
 
   // Stage, base path stuff.
   const app = express();
@@ -64,64 +68,65 @@ const getApp = async () => {
   // Development tweaks.
   app.set("json spaces", 2);
 
-  // TODO(STATIC): For this demo only, we just handle serve static content
-  // directly through the express app. For a real app, you'll want to deploy
-  // static contents to somewhere to be directly served by the CDN.
-  app.use(`${NEXT_APP_ROOT}/static`, express.static(path.join(NEXT_DIR, "static")));
+  // TODO(SERVER): REMOVE?
+  // // TODO(STATIC): For this demo only, we just handle serve static content
+  // // directly through the express app. For a real app, you'll want to deploy
+  // // static contents to somewhere to be directly served by the CDN.
+  // app.use(`${NEXT_APP_ROOT}/static`, express.static(path.join(NEXT_DIR, "static")));
 
-  // TODO(SERVER): NEED THIS?
-  //
-  // Manually proxy JSON data requests to file system.
-  // _next/data/y-BRZHyY6b_T25zMSRPY0/posts/ssg-ssr.json ->
-  // _next/server/posts/ssg-ssr.json
-  //
-  // TODO(STATIC): This _also_ could be uploaded to a real static serve.
-  // It technically _could_ change from data, so possibly disable SSG and
-  // make this always dynamically generated.
-  app.get(`${NEXT_DATA_ROOT}/*`, (req, res, next) => {
-    // Only handle JSON.
-    if (req.url.endsWith(".json")) {
-      const filePath = req.url.replace(NEXT_DATA_ROOT, NEXT_PAGES_DIR);
-      return res.sendFile(filePath);
-    }
+  // // TODO(SERVER): NEED THIS?
+  // //
+  // // Manually proxy JSON data requests to file system.
+  // // _next/data/y-BRZHyY6b_T25zMSRPY0/posts/ssg-ssr.json ->
+  // // _next/server/posts/ssg-ssr.json
+  // //
+  // // TODO(STATIC): This _also_ could be uploaded to a real static serve.
+  // // It technically _could_ change from data, so possibly disable SSG and
+  // // make this always dynamically generated.
+  // app.get(`${NEXT_DATA_ROOT}/*`, (req, res, next) => {
+  //   // Only handle JSON.
+  //   if (req.url.endsWith(".json")) {
+  //     const filePath = req.url.replace(NEXT_DATA_ROOT, NEXT_PAGES_DIR);
+  //     return res.sendFile(filePath);
+  //   }
 
-    return next();
-  });
+  //   return next();
+  // });
 
   // Page handlers,
-  app.all(`${appRoot}(/*)?`, (req, res, next) => {
-    // Remove app root or switch to root ("/").
-    const relPath = req.url.replace(appRoot, "") || "/";
-    const parsedUrl = parse(relPath, true);
+  app.use((req, res) => {
+    // Patch req.
+    const parsedUrl = parse(req.url.replace(BASE_PATH, "") || "/", true);
 
     console.log(JSON.stringify({
-      msg: "TODO REMOVE ROUTES",
-      relPath,
-      parsedUrl
+      msg: "TODO REMOVE SERVER ROUTES",
+      url: req.url,
+      _nextHadBasePath: req._nextHadBasePath,
+      parsedUrlRef: parsedUrl.href
     }, null, 2))
 
     return nextHandler(req, res, parsedUrl);
   });
 
-  // TODO(STATIC): User-added static assets. Should not be in Lambda.
-  app.use(`${appRoot}/`, express.static(NEXT_PUBLIC_DIR));
+  // // TODO(STATIC): User-added static assets. Should not be in Lambda.
+  // app.use(`${APP_ROOT}/`, express.static(NEXT_PUBLIC_DIR));
 
-  // Not found handling.
-  app.use((req, res) => sendPage({
-    pagePath: manifests.pages["/404"],
-    req,
-    res: res.status(404)
-  }));
+  // // Not found handling.
+  // app.use((req, res) => sendPage({
+  //   pagePath: manifests.pages["/404"],
+  //   req,
+  //   res: res.status(404)
+  // }));
 
-  // Error handler.
-  app.use((err, req, res, next) => {
-    console.error(err.stack);
-    return sendPage({
-      pagePath: manifests.pages["/_error"],
-      req,
-      res: res.status(500)
-    });
-  });
+  // // Error handler.
+  // app.use((err, req, res, next) => {
+  //   console.error(err.stack);
+  //   return sendPage({
+  //     pagePath: manifests.pages["/_error"],
+  //     req,
+  //     res: res.status(500)
+  //   });
+  // });
 
   return app;
 };
