@@ -17,9 +17,24 @@ custom:
         - "aws-sdk"
 
         # Ignore real deps in Next.js that we shouldn't need at runtime.
-        - "webpack"
-        - "sass-loader"
+        - "adjust-sourcemap-loader"
+        - "caniuse-lite"
+        - "css-loader"
+        - "loader-utils"
         - "pnp-webpack-plugin"
+        - "postcss-modules-extract-imports"
+        - "postcss-modules-local-by-default"
+        - "postcss-modules-scope"
+        - "postcss-modules-values"
+        - "postcss-selector-parser"
+        - "postcss-value-parser"
+        - "postcss"
+        - "resolve-url-loader"
+        - "sass-loader"
+        - "style-loader"
+        - "watchpack"
+        - "webpack-sources"
+        - "webpack"
 
         # Ignore some build time webpack-y things.
         - "next-plugin-loader?middleware=document-head-tags-server!"
@@ -33,6 +48,8 @@ custom:
 
       dynamic:
         resolutions:
+          # TODO(SERVER): Lots more resolutions needed!
+
           # Our server does lazy requires of pages.
           "./server/index.js": []
 
@@ -100,14 +117,14 @@ functions:
       trace:
         include:
           # Next.js-generated files: gather dependencies
-          - ".next/serverless/**/*.js"
+          - ".next/server/**/*.js"
       include:
         # Raw data for posts is read from disk outside `.next` build directory.
         - "posts/**/*.md"
         # Needed built Next.js assets and info. (Some of these are also traced).
         - ".next/BUILD_ID"
         - ".next/*.json"
-        - ".next/serverless/**"
+        - ".next/server/**"
         # TODO(STATIC): Add a note about this.
         - ".next/static/**"
         - "public/**"
