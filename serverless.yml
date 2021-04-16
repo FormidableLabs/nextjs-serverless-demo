@@ -84,7 +84,7 @@ provider:
   # Lambda configuration
   runtime: nodejs12.x
   timeout: 30 # seconds (`300` max)
-  memorySize: 128 # MB value (`1024` default)
+  memorySize: 1024 # MB value (`1024` default)
 
   # Deployment / environment configuration
   region: ${self:custom.region}
