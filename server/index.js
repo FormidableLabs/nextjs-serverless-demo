@@ -1,5 +1,7 @@
 "use strict";
 
+const SCRIPT_START = new Date();
+
 const { parse } = require("url");
 const express = require("express");
 const next = require("next");
@@ -11,13 +13,23 @@ const JSON_INDENT = 2;
 
 // Create the server app.
 const getApp = async () => {
-  const nextApp = next({ dev: false });
+  console.log(JSON.stringify({
+    msg: "SCRIPT START TIME", // TODO REMOVE
+    elapsedMs: new Date() - SCRIPT_START
+  }, null, JSON_INDENT));
 
-  const start = new Date();
+  const NEXT_START = new Date();
+  const nextApp = next({ dev: false });
+  console.log(JSON.stringify({
+    msg: "NEXT INIT TIME", // TODO REMOVE
+    elapsedMs: new Date() - NEXT_START
+  }, null, JSON_INDENT));
+
+  const PREPARE_START = new Date();
   await nextApp.prepare();
   console.log(JSON.stringify({
-    msg: "TODO REMOVE NEXT PREPARE TIME",
-    elapsedMs: new Date() - start
+    msg: "NEXT PREPARE TIME", // TODO REMOVE
+    elapsedMs: new Date() - PREPARE_START
   }, null, JSON_INDENT));
 
   const nextHandler = nextApp.getRequestHandler();
