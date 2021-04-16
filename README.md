@@ -21,22 +21,12 @@ and is based on the following projects:
 
 The main goals of this demo project are as follows:
 
-1. **Slim down a Next.js Lambda deployment**: The Next.js `target: "serverless"` Node.js outputs are huge. Like really, really big because **each page** contains **all the dependencies**. This project adds a [custom externals handler](./server/util.js) to filter out almost all dependencies in `node_modules` and leave those as normal `require()` calls, thus dramatically decreasing the `pages` bundle sizes. The `node_modules` dependencies are included via `serverless-jetpack` trace mode to keep things tight.
+1. **Slim down a Next.js Lambda deployment**: The Next.js `target: "serverless"` Node.js outputs are huge. Like really, really big because **each page** contains **all the dependencies**. This project aims to use  `target: "server"` Node.js outputs to achieve a smaller package.
 
-
-    If you want to see the difference, we've got an environment variable to skip the Node.js package external excludes, producing default bundles with tons of code per page. Try out the following to see (1) the size of the zip bundle and number of individual files in the zip, and a separate command to see (2) the size of the unzipped index page bundle.
+    Here's our starting point with `serverless` target:
 
     ```sh
-    # Slimmer with packages in real node_modules and not bundle.
     $ yarn clean && yarn build && yarn lambda:sls package --report
-    $ du -sh .serverless/blog.zip && zipinfo .serverless/blog.zip | wc -l
-    2.1M	.serverless/blog.zip
-    1241
-    $ du -sh .next/serverless/pages/index.js
-    52K	.next/serverless/pages/index.js
-
-    # Bigger with packages in each page bundle
-    $ yarn clean && NEXT_SKIP_EXTERNALS=true yarn build && yarn lambda:sls package --report
     $ du -sh .serverless/blog.zip && zipinfo .serverless/blog.zip | wc -l
     4.0M	.serverless/blog.zip
     293
@@ -44,9 +34,21 @@ The main goals of this demo project are as follows:
     2.7M	.next/serverless/pages/index.js
     ```
 
-    > ℹ️ **Note**: For a full optimization we'd probably want to see if we could split out application code that is shared across pages as well. For now, we're avoiding a big chunk of `node_modules`, which has a good punch for just 3 actual pages (plus supporting boilerplate).
+    Here's with `server` target:
 
-2. **Single Lambda/APIGW proxy**: `TODO(ROUTING): INSERT_NOTES`
+    ```sh
+    $ yarn clean && yarn build && yarn lambda:sls package --report
+    $ du -sh .serverless/blog.zip && zipinfo .serverless/blog.zip | wc -l
+    4.5M	.serverless/blog.zip
+    1852
+    $ du -sh .next/server/pages/index.js
+    96K	.next/server/pages/index.js
+    ```
+
+    While the package sizes at 2 pages are comparable for the overall zip, the `server` (96K) vs `serverless` (2.7M) per page cost of `pages/index.js`, and each additional page, becomes apparent.
+
+
+2. **Single Lambda/APIGW proxy**: `TODO(ROUTING): INSERT_NOTES Better than serverless because get full routing!!!`
 
 ### Caveats
 

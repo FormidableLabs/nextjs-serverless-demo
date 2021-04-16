@@ -14,19 +14,5 @@ module.exports = {
   assetPrefix: BASE_PATH,
   env: {
     BASE_PATH
-  },
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      // Add more information in the bundle.
-      config.output.pathinfo = true;
-
-      // TODO: Replace with `webpack-next-externals` when ready.
-      // // Keep `node_modules` as runtime requires to help slim down page bundles.
-      // config.externals = (config.externals || []).concat(
-      //   NEXT_SKIP_EXTERNALS === "true" ? [] : nextExternals()
-      // );
-    }
-
-    return config;
   }
 };
