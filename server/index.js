@@ -1,7 +1,5 @@
 "use strict";
 
-const SCRIPT_START = new Date();
-
 const { parse } = require("url");
 const express = require("express");
 const next = require("next");
@@ -13,25 +11,10 @@ const JSON_INDENT = 2;
 
 // Create the server app.
 const getApp = async () => {
-  console.log(JSON.stringify({
-    msg: "SCRIPT START TIME", // TODO REMOVE
-    elapsedMs: new Date() - SCRIPT_START
-  }, null, JSON_INDENT));
-
-  const NEXT_START = new Date();
+  // Set up Next.js server.
+  // eslint-disable-next-line callback-return
   const nextApp = next({ dev: false });
-  console.log(JSON.stringify({
-    msg: "NEXT INIT TIME", // TODO REMOVE
-    elapsedMs: new Date() - NEXT_START
-  }, null, JSON_INDENT));
-
-  const PREPARE_START = new Date();
   await nextApp.prepare();
-  console.log(JSON.stringify({
-    msg: "NEXT PREPARE TIME", // TODO REMOVE
-    elapsedMs: new Date() - PREPARE_START
-  }, null, JSON_INDENT));
-
   const nextHandler = nextApp.getRequestHandler();
 
   // Stage, base path stuff.
