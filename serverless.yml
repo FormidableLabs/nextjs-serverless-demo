@@ -16,6 +16,8 @@ custom:
         # Provided on Lambda
         - "aws-sdk"
 
+        # TODO(SERVER): Review package reports and remove more unneeded stuff.
+
         # Ignore real deps in Next.js that we shouldn't need at runtime.
         - "adjust-sourcemap-loader"
         - "caniuse-lite"

@@ -48,7 +48,7 @@ The main goals of this demo project are as follows:
     While the package sizes at 2 pages are comparable for the overall zip, the `server` (96K) vs `serverless` (2.7M) per page cost of `pages/index.js`, and each additional page, becomes apparent.
 
 
-2. **Single Lambda/APIGW proxy**: `TODO(ROUTING): INSERT_NOTES Better than serverless because get full routing!!!`
+2. **Single Lambda/APIGW proxy**: The Next.js `target: "serverless"` requires you to either manually create a routing solution based on Next.js generated metadata files or use something like [next-routes](https://github.com/fridays/next-routes). However, `target: "server"` contains a router itself for one endpoint. Thus, by using the `server` target we can avoid one of the biggest pains of deploying to a single Lambda target for an entire Next.js application.
 
 ### Caveats
 
@@ -66,18 +66,18 @@ Start with:
 $ yarn install
 ```
 
-Then we provide a lot of different ways to develop the server. Here is a table of options with current working status:
+Then we provide a lot of different ways to develop the server.
 
-| Command           | Status | URL                                            |
-| ----------------- | ------ | ---------------------------------------------- |
-| `dev`             | works  | http://127.0.0.1:3000/blog/                    |
-|                   | works  | http://127.0.0.1:3000/blog/posts/ssg-ssr       |
-| `start`           | works  | http://127.0.0.1:4000/blog/                    |
-|                   | fails  | http://127.0.0.1:4000/blog/posts/ssg-ssr       |
-| `lambda:localdev` | works  | http://127.0.0.1:5000/blog/                    |
-|                   | fails  | http://127.0.0.1:5000/blog/posts/ssg-ssr       |
-| _deployed_        | works  | https://nextjs-sls-sandbox.formidable.dev/blog/ |
-|                   | fails  | https://nextjs-sls-sandbox.formidable.dev/blog/posts/ssg-ssr |
+| Command           | URL                                            |
+| ----------------- | ---------------------------------------------- |
+| `dev`             | http://127.0.0.1:3000/blog/                    |
+|                   | http://127.0.0.1:3000/blog/posts/ssg-ssr       |
+| `start`           | http://127.0.0.1:4000/blog/                    |
+|                   | http://127.0.0.1:4000/blog/posts/ssg-ssr       |
+| `lambda:localdev` | http://127.0.0.1:5000/blog/                    |
+|                   | http://127.0.0.1:5000/blog/posts/ssg-ssr       |
+| _deployed_        | https://nextjs-sls-sandbox.formidable.dev/blog/ |
+|                   | https://nextjs-sls-sandbox.formidable.dev/blog/posts/ssg-ssr |
 
 ### Next.js Development server (3000)
 
