@@ -7,10 +7,6 @@ import { getSortedPostsData } from "../lib/posts";
 import Link from "next/link";
 import Date from "../components/date";
 
-// TODO: This _shouldn't need BASE_PATH as next/link is supposed to handle it.
-const isServer = () => typeof window === "undefined";
-const LINK_BASE = isServer() ? process.env.BASE_PATH : "";
-
 export default function Home({ allPostsData }) {
   return (
     <Layout home>
@@ -30,7 +26,7 @@ export default function Home({ allPostsData }) {
           {allPostsData.map(({ id, date, title }) => (
             <li className={utilStyles.listItem} key={id}>
               {/*  */}
-              <Link href={`${LINK_BASE}/posts/${id}`}>
+              <Link href={`/posts/${id}`}>
                 <a>{title}</a>
               </Link>
               <br />
