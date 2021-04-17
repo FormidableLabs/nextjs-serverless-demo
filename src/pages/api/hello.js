@@ -1,3 +1,4 @@
 export default function handler(req, res) {
-  res.status(200).json({ text: 'Hello' });
+  // eslint-disable-next-line no-magic-numbers
+  res.status(200).json({ text: "Hello" });
 }
