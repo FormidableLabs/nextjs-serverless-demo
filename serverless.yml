@@ -32,6 +32,7 @@ custom:
         - "postcss-value-parser"
         - "postcss"
         - "resolve-url-loader"
+        - "sass"
         - "sass-loader"
         - "style-loader"
         - "watchpack"
@@ -47,6 +48,7 @@ custom:
         "next":
           - "critters"  # for CSS optimization
           - "pnpapi"    # for PnP usage
+          - "fibers"    # Part of sass-loader
 
       dynamic:
         resolutions:
@@ -122,10 +124,14 @@ functions:
           # Next.js config/generated files: gather dependencies
           - "next.config.js"
           - ".next/server/**/*.js"
+          # Next.js dynamically hooks in compiled webpack stuff (grrr)
+          # See files in https://www.runpkg.com/?next@10.1.3/dist/build/webpack/require-hook.js
+          # https://github.com/FormidableLabs/nextjs-serverless-demo/issues/11
+          - "node_modules/next/dist/compiled/webpack/**/*.js"
     package:
       include:
         # Raw data for posts is read from disk outside `.next` build directory.
-        - "posts/**/*.md"
+        - "src/posts/**/*.md"
         # Needed built Next.js assets and info. (Some of these are also traced).
         - ".next/BUILD_ID"
         - ".next/*.json"
