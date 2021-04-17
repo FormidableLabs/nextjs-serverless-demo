@@ -1,3 +1,4 @@
+/* eslint-disable func-style */
 import fs from "fs";
 import { promisify } from "util";
 import path from "path";

@@ -4,3 +4,4 @@ extends:
 
 rules:
   react/prop-types: "off"
+  filenames/match-regex: "off"
