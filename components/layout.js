@@ -10,6 +10,7 @@ export default function Layout({ children, home }) {
   return (
     <div className={styles.container}>
       <Head>
+        {/* TODO: Favicon will need separately asset handling to be at root slot. */}
         <link rel="icon" href="/favicon.ico" />
         <meta
           name="description"
@@ -28,7 +29,7 @@ export default function Layout({ children, home }) {
         {home ? (
           <>
             <img
-              src="/images/profile.jpg"
+              src={`${process.env.BASE_PATH}/images/profile.jpg`}
               className={`${styles.headerHomeImage} ${utilStyles.borderCircle}`}
               alt={name}
             />
@@ -39,7 +40,7 @@ export default function Layout({ children, home }) {
             <Link href="/">
               <a>
                 <img
-                  src="/images/profile.jpg"
+                  src={`${process.env.BASE_PATH}/images/profile.jpg`}
                   className={`${styles.headerImage} ${utilStyles.borderCircle}`}
                   alt={name}
                 />

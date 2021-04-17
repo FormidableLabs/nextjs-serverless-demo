@@ -17,6 +17,47 @@ and is based on the following projects:
 - [nextjs-fargate-demo](https://github.com/FormidableLabs/nextjs-fargate-demo): We deploy the same Next.js application.
 - [aws-lambda-serverless-reference][]: The CloudFormation/Terraform infrastructure approach is basically identical to our reference Serverless project.
 
+### Goals
+
+The main goals of this demo project are as follows:
+
+1. **Slim down a Next.js Lambda deployment**: The Next.js `target: "serverless"` Node.js outputs are huge. Like really, really big because **each page** contains **all the dependencies**. This project aims to use  `target: "server"` Node.js outputs to achieve a smaller package.
+
+    Here's our starting point with `serverless` target:
+
+    ```sh
+    $ yarn clean && yarn build && yarn lambda:sls package --report
+    $ du -sh .serverless/blog.zip && zipinfo .serverless/blog.zip | wc -l
+    4.0M	.serverless/blog.zip
+    293
+    $ du -sh .next/serverless/pages/index.js
+    2.7M	.next/serverless/pages/index.js
+    ```
+
+    Here's with `server` target:
+
+    ```sh
+    $ yarn clean && yarn build && yarn lambda:sls package --report
+    $ du -sh .serverless/blog.zip && zipinfo .serverless/blog.zip | wc -l
+    4.5M	.serverless/blog.zip
+    1852
+    $ du -sh .next/server/pages/index.js
+    96K	.next/server/pages/index.js
+    ```
+
+    While the package sizes at 2 pages are comparable for the overall zip, the `server` (96K) vs `serverless` (2.7M) per page cost of `pages/index.js`, and each additional page, becomes apparent.
+
+
+2. **Single Lambda/APIGW proxy**: The Next.js `target: "serverless"` requires you to either manually create a routing solution based on Next.js generated metadata files or use something like [next-routes](https://github.com/fridays/next-routes). However, `target: "server"` contains a router itself for one endpoint. Thus, by using the `server` target we can avoid one of the biggest pains of deploying to a single Lambda target for an entire Next.js application.
+
+### Caveats
+
+Some caveats:
+
+1. **Static files**: To make this demo a whole lot easier to develop/deploy, we handle serve static assets _from_ the Lambda. This is not what you should do for a real application. Typically, you'll want to stick those assets in an S3 bucket behind a CDN or something. Look for the `TODO(STATIC)` comments variously throughout this repository to see all the shortcuts you should unwind to then reconfigure for static assets "the right way".
+2. **Deployment URL base path**: We have the Next.js blog up at sub-path `/blog`. A consumer app may go instead for root and that would simplify some of the code we have in this repo to make all the dev + prod experience work the same.
+3. **Lambda SSR + CDN**: Our React SSR hasn't been tuned at all yet for caching in the CDN like a real world app would want to do.
+
 ## Local development
 
 Start with:
@@ -25,32 +66,50 @@ Start with:
 $ yarn install
 ```
 
-### Next.js Development server
+Then we provide a lot of different ways to develop the server.
+
+| Command           | URL                                            |
+| ----------------- | ---------------------------------------------- |
+| `dev`             | http://127.0.0.1:3000/blog/                    |
+|                   | http://127.0.0.1:3000/blog/posts/ssg-ssr       |
+| `start`           | http://127.0.0.1:4000/blog/                    |
+|                   | http://127.0.0.1:4000/blog/posts/ssg-ssr       |
+| `lambda:localdev` | http://127.0.0.1:5000/blog/                    |
+|                   | http://127.0.0.1:5000/blog/posts/ssg-ssr       |
+| _deployed_        | https://nextjs-sls-sandbox.formidable.dev/blog/ |
+|                   | https://nextjs-sls-sandbox.formidable.dev/blog/posts/ssg-ssr |
+
+### Next.js Development server (3000)
+
+The built-in Next.js dev server, compilation and all.
 
 ```sh
 $ yarn dev
 ```
 
-and visit: http://127.0.0.1:3000/
+and visit: http://127.0.0.1:3000/blog/
 
-### Serverless development server
+###  Node.js production server (4000)
+
+We have a Node.js custom `express` server that uses _almost_ all of the Lambda code, which is sometimes an easier development experience that `serverless-offline`. This also could theoretically serve as a real production server on a bare metal or containerized compute instance outside of Lambda.
+
+```sh
+$ yarn clean && yarn build
+$ yarn start
+```
+
+and visit: http://127.0.0.1:4000/blog/
+
+### Lambda development server (5000)
 
 This uses `serverless-offline` to simulate the application running on Lambda.
 
 ```sh
+$ yarn clean && yarn build
 $ yarn lambda:localdev
 ```
 
-and visit: http://127.0.0.1:4000/localdev/blog/
-
-### Next.js Production server
-
-This repo _doesn't_ use the prod server, but if you want to create it, here you go:
-
-```sh
-$ yarn build
-$ yarn start
-```
+and visit: http://127.0.0.1:5000/blog/
 
 ## Deployment
 
@@ -172,6 +231,10 @@ We use AWS IAM users with different privileges for these commands. `FIRST.LAST-a
 is required (to effect the underlying CloudFormation changes).
 
 ```sh
+# Build for production.
+$ yarn clean && yarn build
+
+# Deploy
 $ STAGE=sandbox aws-vault exec FIRST.LAST-admin -- \
   yarn lambda:deploy
 
@@ -184,9 +247,11 @@ $ STAGE=sandbox aws-vault exec FIRST.LAST-admin -- \
 
 See the [aws-lambda-serverless-reference][] docs for additional Serverless/Lambda (`yarn lambda:*`) tasks you can run.
 
-`yarn lambda:info` gives the current APIGW endpoints. As a useful helper we've separately hooked up a custom domain for `STAGE=sandbox` at:
+As a useful helper we've separately hooked up a custom domain for `STAGE=sandbox` at:
 
 https://nextjs-sls-sandbox.formidable.dev/blog/
+
+> ℹ️ **Note**: We set `BASE_PATH` to `/blog` and _not_ `/${STAGE}/blog` like API Gateway does for internal endpoints for our references to other static assets. It's kind of a moot point because frontend assets shouldn't be served via Lambda/APIGW like we do for this demo, but just worth noting that the internal endpoints will have incorrect asset paths.
 
 [aws-lambda-serverless-reference]: https://github.com/FormidableLabs/aws-lambda-serverless-reference
 [aws-vault]: https://github.com/99designs/aws-vault
