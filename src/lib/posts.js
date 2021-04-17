@@ -7,7 +7,7 @@ import html from 'remark-html'
 
 const readdir = promisify(fs.readdir);
 const readFile = promisify(fs.readFile);
-const postsDirectory = path.join(process.cwd(), 'posts')
+const postsDirectory = path.resolve(process.cwd(), 'src/posts')
 
 export async function getSortedPostsData() {
   // Get file names under /posts
