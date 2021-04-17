@@ -19,7 +19,6 @@ export async function getSortedPostsData() {
 
     // Read markdown file as string
     const fullPath = path.join(postsDirectory, fileName);
-    // TODO: On not found, wrap ENOENT and push back to a 404.
     const fileContents = await readFile(fullPath, "utf8");
 
     // Use gray-matter to parse the post metadata section
