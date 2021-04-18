@@ -1,10 +1,12 @@
-import Head from 'next/head'
-import styles from './layout.module.css'
-import utilStyles from '../styles/utils.module.css'
-import Link from 'next/link'
+import React from "react";
+import Head from "next/head";
+import styles from "./layout.module.css";
+import utilStyles from "../styles/utils.module.css";
+import Link from "next/link";
 
-const name = '[Your Name]'
-export const siteTitle = 'Next.js Sample Website'
+const name = "Next.js on AWS Lambda";
+export const siteTitle = "Next.js on AWS Lambda";
+const logoSrc = `${process.env.BASE_PATH}/images/formidable-logo.png`;
 
 export default function Layout({ children, home }) {
   return (
@@ -14,13 +16,7 @@ export default function Layout({ children, home }) {
         <link rel="icon" href="/favicon.ico" />
         <meta
           name="description"
-          content="Learn how to build a personal website using Next.js"
-        />
-        <meta
-          property="og:image"
-          content={`https://og-image.now.sh/${encodeURI(
-            siteTitle
-          )}.png?theme=light&md=0&fontSize=75px&images=https%3A%2F%2Fassets.zeit.co%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`}
+          content="A demonstration blog for deploying Next.js on Lambda"
         />
         <meta name="og:title" content={siteTitle} />
         <meta name="twitter:card" content="summary_large_image" />
@@ -29,7 +25,7 @@ export default function Layout({ children, home }) {
         {home ? (
           <>
             <img
-              src={`${process.env.BASE_PATH}/images/profile.jpg`}
+              src={logoSrc}
               className={`${styles.headerHomeImage} ${utilStyles.borderCircle}`}
               alt={name}
             />
@@ -40,7 +36,7 @@ export default function Layout({ children, home }) {
             <Link href="/">
               <a>
                 <img
-                  src={`${process.env.BASE_PATH}/images/profile.jpg`}
+                  src={logoSrc}
                   className={`${styles.headerImage} ${utilStyles.borderCircle}`}
                   alt={name}
                 />
@@ -63,5 +59,5 @@ export default function Layout({ children, home }) {
         </div>
       )}
     </div>
-  )
+  );
 }

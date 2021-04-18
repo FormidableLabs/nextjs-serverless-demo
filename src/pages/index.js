@@ -1,15 +1,11 @@
-import Head from 'next/head'
-import Layout, { siteTitle } from '../components/layout'
-import utilStyles from '../styles/utils.module.css'
-import { getSortedPostsData } from '../lib/posts'
-import Link from 'next/link'
-import Date from '../components/date'
-
-// TODO: This _shouldn't need BASE_PATH as next/link is supposed to handle it.
-const isServer = () => {
-  return typeof window === "undefined";
-};
-const LINK_BASE = isServer() ? process.env.BASE_PATH : "";
+/* eslint-disable func-style */
+import React from "react";
+import Head from "next/head";
+import Layout, { siteTitle } from "../components/layout";
+import utilStyles from "../styles/utils.module.css";
+import { getSortedPostsData } from "../lib/posts";
+import Link from "next/link";
+import Date from "../components/date";
 
 export default function Home({ allPostsData }) {
   return (
@@ -18,10 +14,16 @@ export default function Home({ allPostsData }) {
         <title>{siteTitle}</title>
       </Head>
       <section className={utilStyles.headingMd}>
-        <p>[Your Self Introduction]</p>
         <p>
-          (This is a sample website - you’ll be building a site like this in{' '}
-          <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
+          A sample blog built with Next.js and deployed to AWS lambda as a
+          single function / endpoint via the Next.js <code>server</code>{" "}
+          output target.
+        </p>
+        <p>
+          Learn more at:{" "}
+          <a
+            href="https://github.com/FormidableLabs/nextjs-serverless-demo"
+          >FormidableLabs/nextjs-serverless-demo</a>
         </p>
       </section>
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
@@ -30,7 +32,7 @@ export default function Home({ allPostsData }) {
           {allPostsData.map(({ id, date, title }) => (
             <li className={utilStyles.listItem} key={id}>
               {/*  */}
-              <Link href={`${LINK_BASE}/posts/${id}`}>
+              <Link href={`/posts/${id}`}>
                 <a>{title}</a>
               </Link>
               <br />
@@ -42,14 +44,14 @@ export default function Home({ allPostsData }) {
         </ul>
       </section>
     </Layout>
-  )
+  );
 }
 
 export async function getStaticProps() {
-  const allPostsData = await getSortedPostsData()
+  const allPostsData = await getSortedPostsData();
   return {
     props: {
       allPostsData
     }
-  }
+  };
 }

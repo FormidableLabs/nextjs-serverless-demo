@@ -14,5 +14,8 @@ module.exports = {
   assetPrefix: BASE_PATH,
   env: {
     BASE_PATH
+  },
+  future: {
+    webpack5: true
   }
 };
