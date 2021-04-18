@@ -15,12 +15,9 @@ export default function Home({ allPostsData }) {
       </Head>
       <section className={utilStyles.headingMd}>
         <p>
-          A sample Next.js blog, deployed with the following:
-          <ul>
-            <li>Serverless Framework</li>
-            <li>Next.js in <code>target: "server"</code> mode</li>
-            <li>Deployed to a single proxy Lambda for all endpoints</li>
-          </ul>
+          A sample blog built with Next.js and deployed to AWS lambda as a
+          single function / endpoint using Next.js <code>server</code>{" "}
+          output target.
         </p>
         <p>
           Learn more at:{" "}
