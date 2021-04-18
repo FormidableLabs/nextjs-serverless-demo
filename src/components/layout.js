@@ -6,6 +6,7 @@ import Link from "next/link";
 
 const name = "Next.js on AWS Lambda";
 export const siteTitle = "Next.js on AWS Lambda";
+const logoSrc = `${process.env.BASE_PATH}/images/formidable-logo.png`;
 
 export default function Layout({ children, home }) {
   return (
@@ -24,7 +25,7 @@ export default function Layout({ children, home }) {
         {home ? (
           <>
             <img
-              src={`${process.env.BASE_PATH}/images/profile.jpg`}
+              src={logoSrc}
               className={`${styles.headerHomeImage} ${utilStyles.borderCircle}`}
               alt={name}
             />
@@ -35,7 +36,7 @@ export default function Layout({ children, home }) {
             <Link href="/">
               <a>
                 <img
-                  src={`${process.env.BASE_PATH}/images/profile.jpg`}
+                  src={logoSrc}
                   className={`${styles.headerImage} ${utilStyles.borderCircle}`}
                   alt={name}
                 />

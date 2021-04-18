@@ -16,7 +16,7 @@ export default function Home({ allPostsData }) {
       <section className={utilStyles.headingMd}>
         <p>
           A sample blog built with Next.js and deployed to AWS lambda as a
-          single function / endpoint using Next.js <code>server</code>{" "}
+          single function / endpoint via the Next.js <code>server</code>{" "}
           output target.
         </p>
         <p>
