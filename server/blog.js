@@ -3,6 +3,7 @@
 const { parse } = require("url");
 const express = require("express");
 const next = require("next");
+const { addRootHandlers } = require("./root");
 
 const DEFAULT_PORT = 4000;
 const PORT = parseInt(process.env.SERVER_PORT || DEFAULT_PORT, 10);
@@ -10,7 +11,7 @@ const HOST = process.env.SERVER_HOST || "0.0.0.0";
 const JSON_INDENT = 2;
 
 // Create the server app.
-const getApp = async () => {
+const getApp = async ({ extraHandlers } = {}) => {
   // Set up Next.js server.
   // eslint-disable-next-line callback-return
   const nextApp = next({ dev: false });
@@ -22,6 +23,11 @@ const getApp = async () => {
 
   // Development tweaks.
   app.set("json spaces", JSON_INDENT);
+
+  // Add in extra handlers
+  if (extraHandlers) {
+    extraHandlers(app);
+  }
 
   // Page handlers,
   app.use((req, res) => {
@@ -51,7 +57,9 @@ module.exports.handler = async (event, context) => {
 // DOCKER/DEV/ANYTHING: Start the server directly.
 if (require.main === module) {
   (async () => {
-    const server = (await getApp()).listen({
+    const server = (await getApp({
+      extraHandlers: addRootHandlers
+    })).listen({
       port: PORT,
       host: HOST
     }, () => {
