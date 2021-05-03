@@ -6,17 +6,22 @@ import Link from "next/link";
 
 const name = "Next.js on AWS Lambda";
 export const siteTitle = "Next.js on AWS Lambda";
-const logoSrc = `${process.env.BASE_PATH}/images/formidable-logo.png`;
+const logoSrc = "/images/formidable-logo.png";
+// eslint-disable-next-line max-len
+const ogImgSrc = `https://og-image.now.sh/${encodeURI(siteTitle)}.png?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`;
 
 export default function Layout({ children, home }) {
   return (
     <div className={styles.container}>
       <Head>
-        {/* TODO: Favicon will need separately asset handling to be at root slot. */}
         <link rel="icon" href="/favicon.ico" />
         <meta
           name="description"
           content="A demonstration blog for deploying Next.js on Lambda"
+        />
+        <meta
+          property="og:image"
+          content={ogImgSrc}
         />
         <meta name="og:title" content={siteTitle} />
         <meta name="twitter:card" content="summary_large_image" />

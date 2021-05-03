@@ -54,8 +54,9 @@ custom:
         resolutions:
           # TODO(SERVER): Lots more resolutions needed!
 
-          # Our server does lazy requires of pages.
-          "./server/index.js": []
+          # Our servers do lazy requires of pages.
+          "./server/blog.js": []
+          "./server/root.js": []
 
           # [169:22]: require(`./transformers/${Transformer}.js`)
           "@ampproject/toolbox-optimizer/lib/DomTransformer.js": []
@@ -112,7 +113,7 @@ provider:
 functions:
   # SCENARIO - base: The simplest, vanilla Serverless app.
   blog:
-    handler: server/index.handler
+    handler: server/blog.handler
     environment:
       BASE_PATH: /blog
     events: # Use a generic proxy to allow Express app to route.
@@ -136,6 +137,18 @@ functions:
         - ".next/BUILD_ID"
         - ".next/*.json"
         - ".next/server/**"
-        # TODO(STATIC): Add a note about this.
+        # TODO(STATIC): Should be served outside Lambda in real production.
         - ".next/static/**"
+
+  # TODO(STATIC): Simple static server for root assets.
+  root:
+    handler: server/root.handler
+    environment:
+      BASE_PATH: /
+    events: # Use a generic proxy to allow Express app to route.
+      - http: ANY /
+      - http: 'ANY /{proxy+}'
+    package:
+      include:
+        # TODO(STATIC): Should be served outside Lambda in real production.
         - "public/**"
