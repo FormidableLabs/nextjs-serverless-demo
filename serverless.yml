@@ -38,6 +38,7 @@ custom:
         - "watchpack"
         - "webpack-sources"
         - "webpack"
+        - "webpack5"
 
         # Ignore some build time webpack-y things.
         - "next-plugin-loader?middleware=document-head-tags-server!"
@@ -125,10 +126,6 @@ functions:
           # Next.js config/generated files: gather dependencies
           - "next.config.js"
           - ".next/server/**/*.js"
-          # Next.js dynamically hooks in compiled webpack stuff (grrr)
-          # See files in https://www.runpkg.com/?next@10.1.3/dist/build/webpack/require-hook.js
-          # https://github.com/FormidableLabs/nextjs-serverless-demo/issues/11
-          - "node_modules/next/dist/compiled/webpack/**/*.js"
     package:
       include:
         # Raw data for posts is read from disk outside `.next` build directory.
