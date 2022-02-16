@@ -7040,9 +7040,9 @@ tough-cookie@^2.3.3, tough-cookie@~2.5.0:
     punycode "^2.1.1"
 
 trace-deps@^0.4.0:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/trace-deps/-/trace-deps-0.4.5.tgz#0491df6a65057c066aa3640903841009cd271dbf"
-  integrity sha512-2UBTubhOItK93Hpqu/LZAaD8aj0EknziULyNossNOLcVrCkLoC4bgOt30sXGeCOg/h/KOcvI57CoJ9mtWVculA==
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/trace-deps/-/trace-deps-0.4.6.tgz#47398241e8c5ac190d8e75ebfb77ce4d062c30b6"
+  integrity sha512-vbFspTlGDi3+/WYz25EpJgkwffeqL1hdXBZndOFOgdVjI+QaG8H9ncjYgG2KYnn9Nu5JKR/N9p3MlsFWLzllUw==
   dependencies:
     acorn-node "^2.0.1"
     resolve "^1.20.0"

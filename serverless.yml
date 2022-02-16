@@ -43,6 +43,11 @@ custom:
         # Ignore some build time webpack-y things.
         - "next-plugin-loader?middleware=document-head-tags-server!"
 
+        # This is not importable in Next 12 as it is a directory with only
+        # another directory inside.
+        # https://unpkg.com/browse/next@12.0.10/dist/build/webpack/plugins/terser-webpack-plugin
+        - "next/dist/build/webpack/plugins/terser-webpack-plugin"
+
       allowMissing:
         "node-fetch":
           - "encoding"
@@ -126,6 +131,10 @@ functions:
           # Next.js config/generated files: gather dependencies
           - "next.config.js"
           - ".next/server/**/*.js"
+          # Next.js dynamically hooks in compiled webpack stuff (grrr)
+          # See files in https://www.runpkg.com/?next@12.0.10/dist/build/webpack/require-hook.js
+          # https://github.com/FormidableLabs/nextjs-serverless-demo/issues/11
+          - "node_modules/next/dist/compiled/webpack/**/*.js"
     package:
       include:
         # Raw data for posts is read from disk outside `.next` build directory.
