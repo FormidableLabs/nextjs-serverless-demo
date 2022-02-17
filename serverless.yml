@@ -135,6 +135,7 @@ functions:
           # See files in https://www.runpkg.com/?next@12.0.10/dist/build/webpack/require-hook.js
           # https://github.com/FormidableLabs/nextjs-serverless-demo/issues/11
           - "node_modules/next/dist/compiled/webpack/**/*.js"
+          - "node_modules/next/dist/compiled/@babel/runtime/**/*.js"
     package:
       include:
         # Raw data for posts is read from disk outside `.next` build directory.
