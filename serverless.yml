@@ -64,6 +64,12 @@ custom:
           "./server/blog.js": []
           "./server/root.js": []
 
+          # Webpack chunk loading
+          # .next/server/webpack-api-runtime.js [131:27]: require("./chunks/" + __webpack_require__.u(chunkId))
+          # .next/server/webpack-runtime.js [143:27]: require("./chunks/" + __webpack_require__.u(chunkId))
+          "./.next/server/webpack-api-runtime.js": []
+          "./.next/server/webpack-runtime.js": []
+
           # [169:22]: require(`./transformers/${Transformer}.js`)
           "@ampproject/toolbox-optimizer/lib/DomTransformer.js": []
 
@@ -78,6 +84,8 @@ custom:
           # next/dist/next-server/server/require.js [1:1183]: require(pagePath)
           # next/dist/next-server/server/require.js [1:1387]: require((0,_path.join)(serverBuildPath,_constants.FONT_MANIFEST))
           "next/dist/next-server/server/require.js": []
+
+          # TODO: HERE -- See if we can remove next/dist/{compiled,build,lib} things...
 
 plugins:
   - serverless-jetpack
