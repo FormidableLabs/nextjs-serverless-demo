@@ -259,4 +259,4 @@ https://nextjs-sls-sandbox.formidable.dev/blog/
 
 ## Maintenance Status
 
-**Archived:** This project is no longer maintained by Formidable. We are no longer responding to issues or pull requests unless they relate to security concerns. We encourage interested developers to fork this project and make it their own!
+**Active:** Formidable is actively working on this project, and we expect to continue for work for the foreseeable future. Bug reports, feature requests and pull requests are welcome.
