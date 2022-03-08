@@ -16,7 +16,26 @@ custom:
         # Provided on Lambda
         - "aws-sdk"
 
-        # TODO(SERVER): Review package reports and remove more unneeded stuff.
+        # Stuff Next.js trace mode ignores.
+        # https://github.com/vercel/next.js/blob/ab40370ea5b69aa4dd601907eb85d25da1140b6b/packages/next/build/index.ts#L1257-L1280
+        # TODO HERE -- bundle5 ignore not working!!!
+        - "next/dist/pages/**/*"
+        - "next/dist/compiled/webpack/bundle4"
+        - "next/dist/compiled/webpack/bundle5"
+        - "webpack5"
+
+        # TODO: HERE -- HANDLE THIS
+        #- "next/dist/server/lib/squoosh/**/*.wasm"
+        # ...(ciEnvironment.hasNextSupport
+        #   ? [
+        #       // only ignore image-optimizer code when
+        #       // this is being handled outside of next-server
+        #       '**/next/dist/server/image-optimizer.js',
+        #       '**/node_modules/sharp/**/*',
+        #     ]
+        #   : []),
+        # ...(!hasSsrAmpPages
+        #   ? ['**/next/dist/compiled/@ampproject/toolbox-optimizer/**/*']
 
         # Ignore real deps in Next.js that we shouldn't need at runtime.
         - "adjust-sourcemap-loader"

@@ -1,8 +1,11 @@
 "use strict";
 
 const { parse } = require("url");
+const path = require("path");
 const express = require("express");
-const next = require("next");
+const NextNodeServer = require("next/dist/server/next-server").default;
+const nextConstants = require("next/dist/shared/lib/constants");
+const loadConfig = require("next/dist/server/config").default;
 const { addRootHandlers } = require("./root");
 
 const DEFAULT_PORT = 4000;
@@ -13,8 +16,12 @@ const JSON_INDENT = 2;
 // Create the server app.
 const getApp = async ({ extraHandlers } = {}) => {
   // Set up Next.js server.
-  // eslint-disable-next-line callback-return
-  const nextApp = next({ dev: false });
+  const serverConfig = await loadConfig(nextConstants.PHASE_PRODUCTION_SERVER, process.cwd());
+  const nextApp = new NextNodeServer({
+    dev: false,
+    dir: path.resolve(__dirname, ".."),
+    conf: serverConfig
+  });
   await nextApp.prepare();
   const nextHandler = nextApp.getRequestHandler();
 
