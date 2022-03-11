@@ -23,19 +23,6 @@ custom:
         - "next/dist/compiled/webpack/bundle5"
         - "webpack5"
 
-        # TODO: HERE -- HANDLE THIS
-        #- "next/dist/server/lib/squoosh/**/*.wasm"
-        # ...(ciEnvironment.hasNextSupport
-        #   ? [
-        #       // only ignore image-optimizer code when
-        #       // this is being handled outside of next-server
-        #       '**/next/dist/server/image-optimizer.js',
-        #       '**/node_modules/sharp/**/*',
-        #     ]
-        #   : []),
-        # ...(!hasSsrAmpPages
-        #   ? ['**/next/dist/compiled/@ampproject/toolbox-optimizer/**/*']
-
         # Ignore real deps in Next.js that we shouldn't need at runtime.
         - "adjust-sourcemap-loader"
         - "caniuse-lite"
@@ -102,8 +89,6 @@ custom:
           # next/dist/next-server/server/require.js [1:1183]: require(pagePath)
           # next/dist/next-server/server/require.js [1:1387]: require((0,_path.join)(serverBuildPath,_constants.FONT_MANIFEST))
           "next/dist/next-server/server/require.js": []
-
-          # TODO: HERE -- See if we can remove next/dist/{compiled,build,lib} things...
 
 plugins:
   - serverless-jetpack
