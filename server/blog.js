@@ -4,9 +4,9 @@ const { parse } = require("url");
 const path = require("path");
 const express = require("express");
 const NextNodeServer = require("next/dist/server/next-server").default;
-const nextConstants = require("next/dist/shared/lib/constants");
-const loadConfig = require("next/dist/server/config").default;
+const { defaultConfig } = require("next/dist/server/config-shared");
 const { addRootHandlers } = require("./root");
+const nextConfig = require("../next.config");
 
 const DEFAULT_PORT = 4000;
 const PORT = parseInt(process.env.SERVER_PORT || DEFAULT_PORT, 10);
@@ -15,12 +15,18 @@ const JSON_INDENT = 2;
 
 // Create the server app.
 const getApp = async ({ extraHandlers } = {}) => {
+  // Get server config.
+  // TODO: Deep merge / whatever next does.
+  const serverConfig = Object.assign({}, defaultConfig, nextConfig);
+
   // Set up Next.js server.
-  const serverConfig = await loadConfig(nextConstants.PHASE_PRODUCTION_SERVER, process.cwd());
   const nextApp = new NextNodeServer({
     dev: false,
     dir: path.resolve(__dirname, ".."),
-    conf: serverConfig
+    conf: {
+      ...serverConfig,
+      distDir: "./.next" // relative to `dir`
+    }
   });
   await nextApp.prepare();
   const nextHandler = nextApp.getRequestHandler();
