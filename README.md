@@ -39,10 +39,10 @@ The main goals of this demo project are as follows:
     ```sh
     $ yarn clean && yarn build && yarn lambda:sls package --report
     $ du -sh .serverless/blog.zip && zipinfo .serverless/blog.zip | wc -l
-    4.5M	.serverless/blog.zip
-    1852
+    2.6M	.serverless/blog.zip
+    1285
     $ du -sh .next/server/pages/index.js
-    96K	.next/server/pages/index.js
+    12K	.next/server/pages/index.js
     ```
 
     While the package sizes at 2 pages are comparable for the overall zip, the `server` (96K) vs `serverless` (2.7M) per page cost of `pages/index.js`, and each additional page, becomes apparent.
