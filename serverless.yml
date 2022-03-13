@@ -36,12 +36,22 @@ custom:
 
       dynamic:
         resolutions:
-          # TODO(SERVER): Lots more resolutions needed!
-
+          # Sources
+          # -------
           # Our servers do lazy requires of pages.
           "./server/blog.js": []
           "./server/root.js": []
 
+          # Built
+          # -----
+          # Webpack chunk loading
+          # .next/server/webpack-api-runtime.js [131:27]: require("./chunks/" + __webpack_require__.u(chunkId))
+          # .next/server/webpack-runtime.js [143:27]: require("./chunks/" + __webpack_require__.u(chunkId))
+          "./.next/server/webpack-api-runtime.js": []
+          "./.next/server/webpack-runtime.js": []
+
+          # Dependencies
+          # ------------
           # express/lib/view.js [81:13]: require(mod)
           "express/lib/view.js": []
 
@@ -76,26 +86,28 @@ custom:
             # TODO: Check if should do concurrent and why it adds an extra 1mb to zip bundle
             # Add this if using `hasConcurrentFeatures`
             # "next/dist/pages/_document-concurrent",
-
-            # TODO: HERE 2nd dynamic require.
           ]
 
-          # TODO: OLD REMOVE
-          # # Webpack chunk loading
-          # # .next/server/webpack-api-runtime.js [131:27]: require("./chunks/" + __webpack_require__.u(chunkId))
-          # # .next/server/webpack-runtime.js [143:27]: require("./chunks/" + __webpack_require__.u(chunkId))
-          # "./.next/server/webpack-api-runtime.js": []
-          # "./.next/server/webpack-runtime.js": []
+          # node_modules/next/dist/server/next-server.js [118:15]: require(pagesManifestPath)
+          # node_modules/next/dist/server/next-server.js [373:33]: require(builtPagePath)
+          # node_modules/next/dist/server/next-server.js [458:15]: require((0, _path).join(this.distDir, 'server', _constants.MIDDLEWARE_FLIGHT_MANIFEST + '.json'))
+          # node_modules/next/dist/server/next-server.js [601:19]: require(middlewareManifestPath)
+          # node_modules/next/dist/server/next-server.js [894:25]: require((0, _path).join(this.distDir, _constants.PRERENDER_MANIFEST))
+          # node_modules/next/dist/server/next-server.js [898:15]: require((0, _path).join(this.distDir, _constants.ROUTES_MANIFEST))
+          # node_modules/next/dist/server/require.js [22:26]: require((0, _path).join(serverBuildPath, _constants.PAGES_MANIFEST))
 
+          # TODO: REVIEW + RESOLUTION
 
-          # # Next.js lazy-loading of manifests and server page bundles.
-          # # next/dist/next-server/server/load-components.js [1:1034]: require((0,_path.join)(distDir,_constants.BUILD_MANIFEST))
-          # # next/dist/next-server/server/load-components.js [1:1093]: require((0,_path.join)(distDir,_constants.REACT_LOADABLE_MANIFEST))
-          # "next/dist/next-server/server/load-components.js": []
-          # # next/dist/next-server/server/require.js [1:656]: require((0,_path.join)(serverBuildPath,_constants.PAGES_MANIFEST))
-          # # next/dist/next-server/server/require.js [1:1183]: require(pagePath)
-          # # next/dist/next-server/server/require.js [1:1387]: require((0,_path.join)(serverBuildPath,_constants.FONT_MANIFEST))
-          # "next/dist/next-server/server/require.js": []
+          # node_modules/next/dist/server/require.js [48:11]: require(pagePath)
+          # node_modules/next/dist/server/require.js [52:25]: require((0, _path).join(serverBuildPath, _constants.FONT_MANIFEST))
+          # node_modules/next/dist/server/require.js [57:31]: require((0, _path).join(serverBuildPath, _constants.MIDDLEWARE_MANIFEST))
+          # node_modules/next/dist/server/web/sandbox/require.js [21:25]: require.resolve(specifier, {
+          #     paths: [
+          #         (0, _path).dirname(referrer)
+          #     ]
+          # })
+
+          # TODO: REVIEW + RESOLUTION
 
 plugins:
   - serverless-jetpack
