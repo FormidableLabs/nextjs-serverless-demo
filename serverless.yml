@@ -18,7 +18,6 @@ custom:
 
         # Stuff Next.js trace mode ignores.
         # https://github.com/vercel/next.js/blob/ab40370ea5b69aa4dd601907eb85d25da1140b6b/packages/next/build/index.ts#L1257-L1280
-        - "next/dist/pages" # TODO: This has a dynamic require
         - "next/dist/compiled/webpack/bundle4"
         - "next/dist/compiled/webpack/bundle5"
         - "webpack5"
