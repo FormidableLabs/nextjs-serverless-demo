@@ -145,6 +145,8 @@ functions:
         - ".next/BUILD_ID"
         - ".next/*.json"
         - ".next/server/**"
+        # Ignore all NFT files.
+        - "!**/*.nft.json"
         # TODO(STATIC): Should be served outside Lambda in real production.
         - ".next/static/**"
 

@@ -40,7 +40,7 @@ The main goals of this demo project are as follows:
     $ yarn clean && yarn build && yarn lambda:sls package --report
     $ du -sh .serverless/blog.zip && zipinfo -1 .serverless/blog.zip | wc -l
     2.6M	.serverless/blog.zip
-    1282
+    1275
     $ du -sh .next/server/pages/index.js
     12K	.next/server/pages/index.js
     ```
