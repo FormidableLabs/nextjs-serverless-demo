@@ -86,26 +86,27 @@ custom:
             # `path.join(distDir, **)` paths are already manually traced and included.
           ]
 
+          # Runtime build directory imports.
           # node_modules/next/dist/server/next-server.js [118:15]: require(pagesManifestPath)
           # node_modules/next/dist/server/next-server.js [373:33]: require(builtPagePath)
           # node_modules/next/dist/server/next-server.js [458:15]: require((0, _path).join(this.distDir, 'server', _constants.MIDDLEWARE_FLIGHT_MANIFEST + '.json'))
           # node_modules/next/dist/server/next-server.js [601:19]: require(middlewareManifestPath)
           # node_modules/next/dist/server/next-server.js [894:25]: require((0, _path).join(this.distDir, _constants.PRERENDER_MANIFEST))
           # node_modules/next/dist/server/next-server.js [898:15]: require((0, _path).join(this.distDir, _constants.ROUTES_MANIFEST))
+          "next/dist/server/next-server.js": []
           # node_modules/next/dist/server/require.js [22:26]: require((0, _path).join(serverBuildPath, _constants.PAGES_MANIFEST))
-
-          # TODO: REVIEW + RESOLUTION
-
           # node_modules/next/dist/server/require.js [48:11]: require(pagePath)
           # node_modules/next/dist/server/require.js [52:25]: require((0, _path).join(serverBuildPath, _constants.FONT_MANIFEST))
           # node_modules/next/dist/server/require.js [57:31]: require((0, _path).join(serverBuildPath, _constants.MIDDLEWARE_MANIFEST))
+          "next/dist/server/require.js": []
+
+          # Allows arbitrary importing of code and execution in a VM. All bets are off :P
           # node_modules/next/dist/server/web/sandbox/require.js [21:25]: require.resolve(specifier, {
           #     paths: [
           #         (0, _path).dirname(referrer)
           #     ]
           # })
-
-          # TODO: REVIEW + RESOLUTION
+          "next/dist/server/web/sandbox/require.js": []
 
 plugins:
   - serverless-jetpack
