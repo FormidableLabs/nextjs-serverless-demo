@@ -18,6 +18,7 @@ custom:
 
         # Stuff Next.js trace mode ignores.
         # https://github.com/vercel/next.js/blob/ab40370ea5b69aa4dd601907eb85d25da1140b6b/packages/next/build/index.ts#L1257-L1280
+        # https://unpkg.com/browse/next@12.1.0/dist/build/index.js (L765-L777)
         - "next/dist/compiled/webpack/bundle4"
         - "next/dist/compiled/webpack/bundle5"
         - "webpack5"

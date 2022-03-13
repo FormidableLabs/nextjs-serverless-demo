@@ -20,6 +20,9 @@ const getApp = async ({ extraHandlers } = {}) => {
   const serverConfig = Object.assign({}, defaultConfig, nextConfig);
 
   // Set up Next.js server.
+  // We use the trace output generated Server file as our model from Next.js:
+  // https://unpkg.com/browse/next@12.1.0/dist/build/utils.js
+  // See `copyTracedFiles()` and outputted server.
   const nextApp = new NextNodeServer({
     dev: false,
     dir: path.resolve(__dirname, ".."),
