@@ -18,40 +18,14 @@ custom:
 
         # Stuff Next.js trace mode ignores.
         # https://github.com/vercel/next.js/blob/ab40370ea5b69aa4dd601907eb85d25da1140b6b/packages/next/build/index.ts#L1257-L1280
-        - "next/dist/pages"
+        - "next/dist/pages" # TODO: This has a dynamic require
         - "next/dist/compiled/webpack/bundle4"
         - "next/dist/compiled/webpack/bundle5"
         - "webpack5"
 
         # Ignore real deps in Next.js that we shouldn't need at runtime.
-        - "adjust-sourcemap-loader"
         - "caniuse-lite"
-        - "css-loader"
-        - "loader-utils"
-        - "pnp-webpack-plugin"
-        - "postcss-modules-extract-imports"
-        - "postcss-modules-local-by-default"
-        - "postcss-modules-scope"
-        - "postcss-modules-values"
-        - "postcss-selector-parser"
-        - "postcss-value-parser"
         - "postcss"
-        - "resolve-url-loader"
-        - "sass"
-        - "sass-loader"
-        - "style-loader"
-        - "watchpack"
-        - "webpack-sources"
-        - "webpack"
-        - "webpack5"
-
-        # Ignore some build time webpack-y things.
-        - "next-plugin-loader?middleware=document-head-tags-server!"
-
-        # This is not importable in Next 12 as it is a directory with only
-        # another directory inside.
-        # https://unpkg.com/browse/next@12.0.10/dist/build/webpack/plugins/terser-webpack-plugin
-        - "next/dist/build/webpack/plugins/terser-webpack-plugin"
 
       allowMissing:
         "node-fetch":

@@ -27,9 +27,9 @@ The main goals of this demo project are as follows:
 
     ```sh
     $ yarn clean && yarn build && yarn lambda:sls package --report
-    $ du -sh .serverless/blog.zip && zipinfo .serverless/blog.zip | wc -l
+    $ du -sh .serverless/blog.zip && zipinfo -1 .serverless/blog.zip | wc -l
     4.0M	.serverless/blog.zip
-    293
+    290
     $ du -sh .next/serverless/pages/index.js
     2.7M	.next/serverless/pages/index.js
     ```
@@ -38,9 +38,9 @@ The main goals of this demo project are as follows:
 
     ```sh
     $ yarn clean && yarn build && yarn lambda:sls package --report
-    $ du -sh .serverless/blog.zip && zipinfo .serverless/blog.zip | wc -l
+    $ du -sh .serverless/blog.zip && zipinfo -1 .serverless/blog.zip | wc -l
     2.6M	.serverless/blog.zip
-    1285
+    1282
     $ du -sh .next/server/pages/index.js
     12K	.next/server/pages/index.js
     ```
