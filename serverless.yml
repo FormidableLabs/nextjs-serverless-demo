@@ -65,7 +65,20 @@ custom:
           # next/dist/server/image-optimizer.js [50:12]: require(process.env.NEXT_SHARP_PATH || 'sharp')
           "next/dist/server/image-optimizer.js": []
 
+          # Server components.
+          # next/dist/server/load-components.js [12:57]: require(`next/dist/pages/_document` + (hasConcurrentFeatures ? '-concurrent' : ''))
+          # next/dist/server/load-components.js [22:23]: require((0, _path).join(distDir, `fallback-${_constants.BUILD_MANIFEST}`))
+          # next/dist/server/load-components.js [61:8]: require((0, _path).join(distDir, _constants.BUILD_MANIFEST))
+          # next/dist/server/load-components.js [62:8]: require((0, _path).join(distDir, _constants.REACT_LOADABLE_MANIFEST))
+          "next/dist/server/load-components.js": [
+            "next/dist/pages/_document",
 
+            # TODO: Check if should do concurrent and why it adds an extra 1mb to zip bundle
+            # Add this if using `hasConcurrentFeatures`
+            # "next/dist/pages/_document-concurrent",
+
+            # TODO: HERE 2nd dynamic require.
+          ]
 
           # TODO: OLD REMOVE
           # # Webpack chunk loading
