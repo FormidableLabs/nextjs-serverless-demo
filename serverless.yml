@@ -82,10 +82,8 @@ custom:
           # next/dist/server/load-components.js [62:8]: require((0, _path).join(distDir, _constants.REACT_LOADABLE_MANIFEST))
           "next/dist/server/load-components.js": [
             "next/dist/pages/_document",
-
-            # TODO: Check if should do concurrent and why it adds an extra 1mb to zip bundle
-            # Add this if using `hasConcurrentFeatures`
-            # "next/dist/pages/_document-concurrent",
+            "next/dist/pages/_document-concurrent"
+            # `path.join(distDir, **)` paths are already manually traced and included.
           ]
 
           # node_modules/next/dist/server/next-server.js [118:15]: require(pagesManifestPath)
