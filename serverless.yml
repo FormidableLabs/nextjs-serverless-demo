@@ -34,6 +34,14 @@ custom:
           - "critters"  # for CSS optimization
           - "pnpapi"    # for PnP usage
           - "fibers"    # Part of sass-loader
+          # If using `experimental.nextScriptWorkers = true` you'll need to remove
+          # this allowMissing and `yarn add @builder.io/partytown`
+          # See: https://nextjs.org/docs/basic-features/script#off-loading-scripts-to-a-web-worker-experimental
+          - "@builder.io/partytown"
+        # ... and here too for partytown.
+        "./.next/server/pages/_document.js":
+          - "@builder.io/partytown"
+
 
       dynamic:
         resolutions:
@@ -76,16 +84,23 @@ custom:
           # next/dist/server/image-optimizer.js [50:12]: require(process.env.NEXT_SHARP_PATH || 'sharp')
           "next/dist/server/image-optimizer.js": []
 
-          # Server components.
-          # next/dist/server/load-components.js [12:57]: require(`next/dist/pages/_document` + (hasConcurrentFeatures ? '-concurrent' : ''))
+          # (Needed in 12.1.0, but not 12.1.4+)
+          # # Server components.
+          # # next/dist/server/load-components.js [12:57]: require(`next/dist/pages/_document` + (hasConcurrentFeatures ? '-concurrent' : ''))
+          # # next/dist/server/load-components.js [22:23]: require((0, _path).join(distDir, `fallback-${_constants.BUILD_MANIFEST}`))
+          # # next/dist/server/load-components.js [61:8]: require((0, _path).join(distDir, _constants.BUILD_MANIFEST))
+          # # next/dist/server/load-components.js [62:8]: require((0, _path).join(distDir, _constants.REACT_LOADABLE_MANIFEST))
+          # "next/dist/server/load-components.js":
+          #   - "next/dist/pages/_document"
+          #   - "next/dist/pages/_document-concurrent"
+          #   # `path.join(distDir, **)` paths are already manually traced and included.
+
+          # Next 12.1.4+
           # next/dist/server/load-components.js [22:23]: require((0, _path).join(distDir, `fallback-${_constants.BUILD_MANIFEST}`))
-          # next/dist/server/load-components.js [61:8]: require((0, _path).join(distDir, _constants.BUILD_MANIFEST))
-          # next/dist/server/load-components.js [62:8]: require((0, _path).join(distDir, _constants.REACT_LOADABLE_MANIFEST))
-          "next/dist/server/load-components.js": [
-            "next/dist/pages/_document",
-            "next/dist/pages/_document-concurrent"
-            # `path.join(distDir, **)` paths are already manually traced and included.
-          ]
+          # next/dist/server/load-components.js [59:8]: require((0, _path).join(distDir, _constants.BUILD_MANIFEST))
+          # next/dist/server/load-components.js [60:8]: require((0, _path).join(distDir, _constants.REACT_LOADABLE_MANIFEST))
+          # next/dist/server/load-components.js [61:27]: require((0, _path).join(distDir, 'server', _constants.MIDDLEWARE_FLIGHT_MANIFEST + '.json'))
+          "next/dist/server/load-components.js": []
 
           # Runtime build directory imports.
           # node_modules/next/dist/server/next-server.js [118:15]: require(pagesManifestPath)
