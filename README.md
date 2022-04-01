@@ -50,6 +50,14 @@ The main goals of this demo project are as follows:
 
 2. **Single Lambda/APIGW proxy**: The Next.js `target: "serverless"` requires you to either manually create a routing solution based on Next.js generated metadata files or use something like [next-routes](https://github.com/fridays/next-routes). However, `target: "server"` contains a router itself for one endpoint. Thus, by using the `server` target we can avoid one of the biggest pains of deploying to a single Lambda target for an entire Next.js application.
 
+### Implementation
+
+We use the production-only Node server found in `next/dist/server/next-server.js` instead of the development augmented core server found in `next/dist/server/next.js`. This has a few extra constraints, but ends up being a good choice for the following reasons:
+
+- Both `next-server.js` and `next.js` get to use the built-in Next.js router that is unavailable when using `serverless` target.
+- The traced file bundle for `next-server.js` is much slimmer as tracing can easily skip build dependencies like `webpack`, `babel`, etc. that come in with `next.js`
+- Next.js itself now follows this exact model for their [experimental tracing support](https://nextjs.org/docs/advanced-features/output-file-tracing) and we can see a similar server configuration [here](https://unpkg.com/browse/next@12.1.4/dist/build/utils.js).
+
 ### Caveats
 
 Some caveats:
