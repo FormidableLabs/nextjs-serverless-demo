@@ -16,7 +16,10 @@ const JSON_INDENT = 2;
 // Create the server app.
 const getApp = async ({ extraHandlers } = {}) => {
   // Get server config.
-  // TODO: Deep merge / whatever next does.
+  // TODO(18): Do full Next.js configuration mutations.
+  //           Our simple assign() here only works because our next.config.js
+  //           is a simple object with object values.
+  // https://github.com/FormidableLabs/nextjs-serverless-demo/issues/18
   const serverConfig = Object.assign({}, defaultConfig, nextConfig);
 
   // Set up Next.js server.
