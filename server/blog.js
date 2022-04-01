@@ -1,9 +1,12 @@
 "use strict";
 
 const { parse } = require("url");
+const path = require("path");
 const express = require("express");
-const next = require("next");
+const NextNodeServer = require("next/dist/server/next-server").default;
+const { defaultConfig } = require("next/dist/server/config-shared");
 const { addRootHandlers } = require("./root");
+const nextConfig = require("../next.config");
 
 const DEFAULT_PORT = 4000;
 const PORT = parseInt(process.env.SERVER_PORT || DEFAULT_PORT, 10);
@@ -12,9 +15,25 @@ const JSON_INDENT = 2;
 
 // Create the server app.
 const getApp = async ({ extraHandlers } = {}) => {
+  // Get server config.
+  // TODO(18): Do full Next.js configuration mutations.
+  //           Our simple assign() here only works because our next.config.js
+  //           is a simple object with object values.
+  // https://github.com/FormidableLabs/nextjs-serverless-demo/issues/18
+  const serverConfig = Object.assign({}, defaultConfig, nextConfig);
+
   // Set up Next.js server.
-  // eslint-disable-next-line callback-return
-  const nextApp = next({ dev: false });
+  // We use the trace output generated Server file as our model from Next.js:
+  // https://unpkg.com/browse/next@12.1.0/dist/build/utils.js
+  // See `copyTracedFiles()` and outputted server.
+  const nextApp = new NextNodeServer({
+    dev: false,
+    dir: path.resolve(__dirname, ".."),
+    conf: {
+      ...serverConfig,
+      distDir: "./.next" // relative to `dir`
+    }
+  });
   await nextApp.prepare();
   const nextHandler = nextApp.getRequestHandler();
 
