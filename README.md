@@ -17,7 +17,7 @@ and is based on the following projects:
 - [nextjs-fargate-demo](https://github.com/FormidableLabs/nextjs-fargate-demo): We deploy the same Next.js application.
 - [aws-lambda-serverless-reference][]: The CloudFormation/Terraform infrastructure approach is basically identical to our reference Serverless project.
 
-### Goals
+## Goals
 
 The main goals of this demo project are as follows:
 
@@ -50,7 +50,9 @@ The main goals of this demo project are as follows:
 
 2. **Single Lambda/APIGW proxy**: The Next.js `target: "serverless"` requires you to either manually create a routing solution based on Next.js generated metadata files or use something like [next-routes](https://github.com/fridays/next-routes). However, `target: "server"` contains a router itself for one endpoint. Thus, by using the `server` target we can avoid one of the biggest pains of deploying to a single Lambda target for an entire Next.js application.
 
-### Implementation
+## Implementation
+
+### Runtime
 
 We use the production-only Node server found in `next/dist/server/next-server.js` instead of the development augmented core server found in `next/dist/server/next.js`. This has a few extra constraints, but ends up being a good choice for the following reasons:
 
@@ -58,7 +60,20 @@ We use the production-only Node server found in `next/dist/server/next-server.js
 - The traced file bundle for `next-server.js` is much slimmer as tracing can easily skip build dependencies like `webpack`, `babel`, etc. that come in with `next.js`
 - Next.js itself now follows this exact model for their [experimental tracing support](https://nextjs.org/docs/advanced-features/output-file-tracing) and we can see a similar server configuration [here](https://unpkg.com/browse/next@12.1.4/dist/build/utils.js).
 
-### Caveats
+### Packaging
+
+We package only the individual files needed at runtime in our Lambda using the Serverless Application Framework with the [serverless-jetpack](https://github.com/FormidableLabs/serverless-jetpack) plugin. The Jetpack plugin examines all the application entry points and then traces all imports and then creates a zip bundle of only the files that will be needed at runtime.
+
+For those doing their own Lambda deployments (say with Terraform), we provide a standalone CLI, [trace-pkg](https://github.com/FormidableLabs/trace-pkg), to produce traced zip bundles from entry points.
+
+Part of the underlying bundle size problem is that the `next` package ships with a ton of build-time and development-only dependencies that artificially inflate the size of a bundle suitable for application deployment. By using the `next-server.js` runtime and file tracing, we get the smallest possible package for cloud deployment that is still correct.
+
+To read more about file tracing and integration with your applications, see
+
+- [Jetpack: trace your way to faster and smaller Serverless packages](https://formidable.com/blog/2020/jetpack-trace-your-way-to-faster-and-smaller-serverless-packages/)
+- [trace-pkg: Package Node.js apps for AWS Lambda and beyond](https://formidable.com/blog/2020/trace-pkg-package-node-js-apps-for-aws-lambda-and-beyond/)
+
+## Caveats
 
 Some caveats:
 
@@ -263,7 +278,6 @@ https://nextjs-sls-sandbox.formidable.dev/blog/
 
 [aws-lambda-serverless-reference]: https://github.com/FormidableLabs/aws-lambda-serverless-reference
 [aws-vault]: https://github.com/99designs/aws-vault
-
 
 ## Maintenance Status
 
