@@ -39,13 +39,13 @@ The main goals of this demo project are as follows:
     ```sh
     $ yarn clean && yarn build && yarn lambda:sls package --report
     $ du -sh .serverless/blog.zip && zipinfo -1 .serverless/blog.zip | wc -l
-    2.6M	.serverless/blog.zip
-    1282
+    3.0M	.serverless/blog.zip
+    1291
     $ du -sh .next/server/pages/index.js
     12K	.next/server/pages/index.js
     ```
 
-    While the package sizes at 2 pages are comparable for the overall zip, the `server` (96K) vs `serverless` (2.7M) per page cost of `pages/index.js`, and each additional page, becomes apparent.
+    While the package sizes at 2 pages are comparable for the overall zip, the `server` (12K) vs `serverless` (2.7M) per page cost of `pages/index.js`, and each additional page, becomes apparent.
 
 
 2. **Single Lambda/APIGW proxy**: The Next.js `target: "serverless"` requires you to either manually create a routing solution based on Next.js generated metadata files or use something like [next-routes](https://github.com/fridays/next-routes). However, `target: "server"` contains a router itself for one endpoint. Thus, by using the `server` target we can avoid one of the biggest pains of deploying to a single Lambda target for an entire Next.js application.
