@@ -144,7 +144,7 @@ provider:
     SERVICE_NAME: ${self:custom.service}
     NODE_ENV: production
 
-  # AWS Resource Tags: Match terraform module
+  # AWS Resource Tags
   stackTags: # For CF stack
     Stage: ${self:custom.stage}
     Service: ${self:custom.service}
