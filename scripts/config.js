@@ -7,7 +7,7 @@ const path = require("path");
 const { PHASE_PRODUCTION_SERVER } = require("next/dist/shared/lib/constants");
 const { "default": loadConfig } = require("next/dist/server/config");
 
-const nextConf = require("../next.config");
+const nextConf = require(path.resolve("next.config"));
 const { error } = console;
 
 // ============================================================================
