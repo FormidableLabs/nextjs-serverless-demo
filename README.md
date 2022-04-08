@@ -1,6 +1,8 @@
 Next.js Serverless Demo
 =======================
 
+[![Maintenance Status][maintenance-image]](#maintenance-status)
+
 Deploy Next.js to AWS Lambda using the Serverless Application Framework.
 
 ## Project notes
@@ -195,3 +197,5 @@ https://nextjs-sls-sandbox.formidable.dev/blog/
 ## Maintenance Status
 
 **Active:** Formidable is actively working on this project, and we expect to continue for work for the foreseeable future. Bug reports, feature requests and pull requests are welcome.
+
+[maintenance-image]: https://img.shields.io/badge/maintenance-active-green.svg?color=brightgreen&style=flat
