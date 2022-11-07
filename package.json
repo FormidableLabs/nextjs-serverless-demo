@@ -24,12 +24,12 @@
     "lambda:_delete": "yarn run lambda:sls remove"
   },
   "dependencies": {
-    "date-fns": "^2.21.1",
+    "date-fns": "^2.29.3",
     "express": "^4.17.3",
     "gray-matter": "^4.0.2",
     "next": "^12.1.4",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "remark": "^13.0.0",
     "remark-html": "^13.0.1",
     "serverless-http": "^2.7.0"
