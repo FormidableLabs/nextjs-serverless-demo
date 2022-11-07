@@ -9,13 +9,9 @@ if (!BASE_PATH) {
 }
 
 module.exports = {
-  target: "server",
   basePath: BASE_PATH,
   assetPrefix: BASE_PATH,
   env: {
     BASE_PATH
-  },
-  future: {
-    webpack5: true
   }
 };
