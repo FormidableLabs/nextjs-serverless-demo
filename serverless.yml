@@ -24,7 +24,7 @@ custom:
         # - "next/dist/compiled/webpack/bundle5"
         # - "webpack5"
 
-        # TODO(NEXT13): ADD COMMENT
+        # TODO(NEXT13): Comment
         - "next/dist/compiled/webpack"
 
         # Ignore real deps in Next.js that we shouldn't need at runtime.
@@ -57,6 +57,21 @@ custom:
 
           # Built
           # -----
+          # Next13 next-server adds in a webpack / Node.js patching hook (ugh!) as well as
+          # compiled-in versions of libraries that we need to address.
+          # See
+          # - https://github.com/vercel/next.js/blob/v13.0.2/packages/next/server/next-server.ts#L1
+          # - https://github.com/vercel/next.js/blob/v13.0.2/packages/next/build/webpack/require-hook.ts
+
+          # These libraries require root "react-dom" which now should have the built-in index.
+          "next/dist/compiled/react-dom/cjs/react-dom-server-legacy.browser.development.js":
+            - "next/dist/compiled/react-dom/index.js"
+          "next/dist/compiled/react-dom/cjs/react-dom-server-legacy.browser.production.min.js":
+            - "next/dist/compiled/react-dom/index.js"
+
+          # TODO(NEXT13): Review and remove any all of these...
+          # =============
+
           # Webpack chunk loading
           # .next/server/webpack-api-runtime.js [131:27]: require("./chunks/" + __webpack_require__.u(chunkId))
           # .next/server/webpack-runtime.js [143:27]: require("./chunks/" + __webpack_require__.u(chunkId))
@@ -136,7 +151,7 @@ provider:
   name: aws
 
   # Lambda configuration
-  runtime: nodejs12.x
+  runtime: nodejs16.x
   timeout: 30 # seconds (`300` max)
   memorySize: 1024 # MB value (`1024` default)
 
