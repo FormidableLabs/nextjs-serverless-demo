@@ -27,7 +27,6 @@ custom:
         - "caniuse-lite"
         - "postcss"
         - "webpack"
-        - "next/dist/build/webpack"
 
       allowMissing:
         "node-fetch":
