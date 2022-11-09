@@ -20,7 +20,7 @@ custom:
         # https://github.com/vercel/next.js/blob/ab40370ea5b69aa4dd601907eb85d25da1140b6b/packages/next/build/index.ts#L1257-L1280
         # https://unpkg.com/browse/next@12.1.0/dist/build/index.js (L765-L777)
         # https://github.com/vercel/next.js/blob/v13.0.2/packages/next/build/index.ts#L1807-L1823
-        - "next/dist/compiled/webpack/bundle5"
+        - "next/dist/compiled/webpack/bundle5" # TODO(NEXT13): STILL HERE???
         - "webpack5"
 
         # Ignore real deps in Next.js that we shouldn't need at runtime.
@@ -54,23 +54,6 @@ custom:
 
           # Built
           # -----
-          # Next13 next-server adds in a webpack / Node.js patching hook (ugh!) as well as
-          # compiled-in versions of libraries that we need to address.
-          # See
-          # - https://github.com/vercel/next.js/blob/v13.0.2/packages/next/server/next-server.ts#L1
-          # - https://github.com/vercel/next.js/blob/v13.0.2/packages/next/build/webpack/require-hook.ts
-          #
-          # Note diff from:
-          # - https://github.com/vercel/next.js/blob/v12.3.2/packages/next/server/next-server.ts
-          # These libraries require root "react-dom" which now should have the built-in index.
-          "next/dist/compiled/react-dom/cjs/react-dom-server-legacy.browser.development.js":
-            - "next/dist/compiled/react-dom/index.js"
-          "next/dist/compiled/react-dom/cjs/react-dom-server-legacy.browser.production.min.js":
-            - "next/dist/compiled/react-dom/index.js"
-
-          # TODO(NEXT13): Review and remove any all of these...
-          # =============
-
           # Webpack chunk loading
           # .next/server/webpack-api-runtime.js [131:27]: require("./chunks/" + __webpack_require__.u(chunkId))
           # .next/server/webpack-runtime.js [143:27]: require("./chunks/" + __webpack_require__.u(chunkId))
@@ -97,6 +80,20 @@ custom:
           # next/dist/compiled/jest-worker/index.js [1:8267]: require.resolve(e)
           # next/dist/compiled/jest-worker/index.js [1:22446]: require(e)
           "next/dist/compiled/jest-worker/index.js": []
+
+          # Next13 next-server adds in a webpack / Node.js patching hook (ugh!) as well as
+          # compiled-in versions of libraries that we need to address.
+          # See
+          # - https://github.com/vercel/next.js/blob/v13.0.2/packages/next/server/next-server.ts#L1
+          # - https://github.com/vercel/next.js/blob/v13.0.2/packages/next/build/webpack/require-hook.ts
+          #
+          # Note diff from:
+          # - https://github.com/vercel/next.js/blob/v12.3.2/packages/next/server/next-server.ts
+          # These libraries require root "react-dom" which now should have the built-in index.
+          "next/dist/compiled/react-dom/cjs/react-dom-server-legacy.browser.development.js":
+            - "next/dist/compiled/react-dom/index.js"
+          "next/dist/compiled/react-dom/cjs/react-dom-server-legacy.browser.production.min.js":
+            - "next/dist/compiled/react-dom/index.js"
 
           # Image optimization.
           # next/dist/server/image-optimizer.js [50:12]: require(process.env.NEXT_SHARP_PATH || 'sharp')
@@ -128,19 +125,12 @@ custom:
           # node_modules/next/dist/server/next-server.js [894:25]: require((0, _path).join(this.distDir, _constants.PRERENDER_MANIFEST))
           # node_modules/next/dist/server/next-server.js [898:15]: require((0, _path).join(this.distDir, _constants.ROUTES_MANIFEST))
           "next/dist/server/next-server.js": []
+
           # node_modules/next/dist/server/require.js [22:26]: require((0, _path).join(serverBuildPath, _constants.PAGES_MANIFEST))
           # node_modules/next/dist/server/require.js [48:11]: require(pagePath)
           # node_modules/next/dist/server/require.js [52:25]: require((0, _path).join(serverBuildPath, _constants.FONT_MANIFEST))
           # node_modules/next/dist/server/require.js [57:31]: require((0, _path).join(serverBuildPath, _constants.MIDDLEWARE_MANIFEST))
           "next/dist/server/require.js": []
-
-          # Allows arbitrary importing of code and execution in a VM. All bets are off :P
-          # node_modules/next/dist/server/web/sandbox/require.js [21:25]: require.resolve(specifier, {
-          #     paths: [
-          #         (0, _path).dirname(referrer)
-          #     ]
-          # })
-          "next/dist/server/web/sandbox/require.js": []
 
 plugins:
   - serverless-jetpack
