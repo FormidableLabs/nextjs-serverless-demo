@@ -65,19 +65,21 @@ custom:
           "express/lib/view.js": []
 
           # Optional optimizer.
-          # next/dist/compiled/@ampproject/toolbox-optimizer/index.js [1:18400]: require.resolve(t)
+          # next/dist/compiled/@ampproject/toolbox-optimizer/index.js [1:21249]: require.resolve(e)
           "next/dist/compiled/@ampproject/toolbox-optimizer/index.js": []
 
           # Webpack plugin tool.
-          # next/dist/compiled/cssnano-simple/index.js [1:22560]: require.resolve(name,{paths:["."]})
-          # next/dist/compiled/cssnano-simple/index.js [1:22989]: require(__nccwpck_require2_(8440).resolve(path.join(v,"browserslist-stats.json"),{paths:["."]}))
-          # next/dist/compiled/cssnano-simple/index.js [1:24041]: require("caniuse-lite/data/regions/"+_+".js")
-          # next/dist/compiled/cssnano-simple/index.js [1:24281]: require("caniuse-lite/data/features/"+v+".js")
+          # next/dist/compiled/cssnano-simple/index.js [1:21238]: require.resolve(name,{paths:[".",ctx.path]})
+          # next/dist/compiled/cssnano-simple/index.js [1:21676]: require(__nccwpck_require2_(8440).resolve(path.join(v,"browserslist-stats.json"),{paths:["."]}))
+          # next/dist/compiled/cssnano-simple/index.js [1:22728]: require("caniuse-lite/data/regions/"+y+".js")
+          # next/dist/compiled/cssnano-simple/index.js [1:22968]: require("caniuse-lite/data/features/"+v+".js")
           "next/dist/compiled/cssnano-simple/index.js": []
 
-          # Webpack related.
-          # next/dist/compiled/jest-worker/index.js [1:8267]: require.resolve(e)
-          # next/dist/compiled/jest-worker/index.js [1:22446]: require(e)
+          # TODO(NEXT13)
+          # next/dist/compiled/edge-runtime/index.js [1:6716]: require.resolve(c,{paths:[(0,s.dirname)(a)]})
+
+          # next/dist/compiled/jest-worker/index.js [1:7889]: require.resolve(e)
+          # next/dist/compiled/jest-worker/index.js [1:22455]: require(e)
           "next/dist/compiled/jest-worker/index.js": []
 
           # Next13 next-server adds in a webpack / Node.js patching hook (ugh!) as well as
@@ -94,41 +96,45 @@ custom:
           "next/dist/compiled/react-dom/cjs/react-dom-server-legacy.browser.production.min.js":
             - "next/dist/compiled/react-dom/index.js"
 
-          # Image optimization.
-          # next/dist/server/image-optimizer.js [50:12]: require(process.env.NEXT_SHARP_PATH || 'sharp')
+          # TODO(NEXT13)
+          # next/dist/lib/get-package-version.js [88:27]: require.resolve(`${name}/package.json`, {
+
+          # TODO(NEXT13)
+          # next/dist/server/config-utils.js [188:12]: require.resolve(replacement)
+
+          # TODO(NEXT13)
+          # next/dist/server/config.js [68:35]: require(path)
+          # next/dist/server/config.js [70:41]: import((0, _url).pathToFileURL(path).href)
+
+          # next/dist/server/image-optimizer.js [54:12]: require(process.env.NEXT_SHARP_PATH || "sharp")
           "next/dist/server/image-optimizer.js": []
 
-          # (Needed in 12.1.0, but not 12.1.4+)
-          # # Server components.
-          # # next/dist/server/load-components.js [12:57]: require(`next/dist/pages/_document` + (hasConcurrentFeatures ? '-concurrent' : ''))
-          # # next/dist/server/load-components.js [22:23]: require((0, _path).join(distDir, `fallback-${_constants.BUILD_MANIFEST}`))
-          # # next/dist/server/load-components.js [61:8]: require((0, _path).join(distDir, _constants.BUILD_MANIFEST))
-          # # next/dist/server/load-components.js [62:8]: require((0, _path).join(distDir, _constants.REACT_LOADABLE_MANIFEST))
-          # "next/dist/server/load-components.js":
-          #   - "next/dist/pages/_document"
-          #   - "next/dist/pages/_document-concurrent"
-          #   # `path.join(distDir, **)` paths are already manually traced and included.
+          # TODO(NEXT13)
+          # next/dist/server/lib/incremental-cache/index.js [29:30]: require(incrementalCacheHandlerPath)
 
-          # Next 12.1.4+
           # next/dist/server/load-components.js [22:23]: require((0, _path).join(distDir, `fallback-${_constants.BUILD_MANIFEST}`))
-          # next/dist/server/load-components.js [59:8]: require((0, _path).join(distDir, _constants.BUILD_MANIFEST))
-          # next/dist/server/load-components.js [60:8]: require((0, _path).join(distDir, _constants.REACT_LOADABLE_MANIFEST))
-          # next/dist/server/load-components.js [61:27]: require((0, _path).join(distDir, 'server', _constants.MIDDLEWARE_FLIGHT_MANIFEST + '.json'))
+          # next/dist/server/load-components.js [39:8]: require((0, _path).join(distDir, _constants.BUILD_MANIFEST))
+          # next/dist/server/load-components.js [40:8]: require((0, _path).join(distDir, _constants.REACT_LOADABLE_MANIFEST))
+          # next/dist/server/load-components.js [41:30]: require((0, _path).join(distDir, "server", _constants.FLIGHT_MANIFEST + ".json"))
           "next/dist/server/load-components.js": []
 
           # Runtime build directory imports.
-          # node_modules/next/dist/server/next-server.js [118:15]: require(pagesManifestPath)
-          # node_modules/next/dist/server/next-server.js [373:33]: require(builtPagePath)
-          # node_modules/next/dist/server/next-server.js [458:15]: require((0, _path).join(this.distDir, 'server', _constants.MIDDLEWARE_FLIGHT_MANIFEST + '.json'))
-          # node_modules/next/dist/server/next-server.js [601:19]: require(middlewareManifestPath)
-          # node_modules/next/dist/server/next-server.js [894:25]: require((0, _path).join(this.distDir, _constants.PRERENDER_MANIFEST))
-          # node_modules/next/dist/server/next-server.js [898:15]: require((0, _path).join(this.distDir, _constants.ROUTES_MANIFEST))
+          # next/dist/server/next-server.js [149:15]: require((0, _path).join(this.serverDistDir, _constants.PAGES_MANIFEST))
+          # next/dist/server/next-server.js [154:19]: require(appPathsManifestPath)
+          # next/dist/server/next-server.js [469:33]: require(builtPagePath)
+          # next/dist/server/next-server.js [587:15]: require((0, _path).join(this.distDir, "server", _constants.FLIGHT_MANIFEST + ".json"))
+          # next/dist/server/next-server.js [591:15]: require((0, _path).join(this.distDir, "server", _constants.FLIGHT_SERVER_CSS_MANIFEST + ".json"))
+          # next/dist/server/next-server.js [595:15]: require((0, _path).join(this.distDir, "server", `${_constants.FONT_LOADER_MANIFEST}.json`))
+          # next/dist/server/next-server.js [988:25]: require((0, _path).join(this.serverDistDir, _constants.MIDDLEWARE_MANIFEST))
+          # next/dist/server/next-server.js [1018:25]: require((0, _path).join(this.serverDistDir, _constants.MIDDLEWARE_MANIFEST))
+          # next/dist/server/next-server.js [1341:25]: require((0, _path).join(this.distDir, _constants.PRERENDER_MANIFEST))
+          # next/dist/server/next-server.js [1345:15]: require((0, _path).join(this.distDir, _constants.ROUTES_MANIFEST))
           "next/dist/server/next-server.js": []
 
-          # node_modules/next/dist/server/require.js [22:26]: require((0, _path).join(serverBuildPath, _constants.PAGES_MANIFEST))
-          # node_modules/next/dist/server/require.js [48:11]: require(pagePath)
-          # node_modules/next/dist/server/require.js [52:25]: require((0, _path).join(serverBuildPath, _constants.FONT_MANIFEST))
-          # node_modules/next/dist/server/require.js [57:31]: require((0, _path).join(serverBuildPath, _constants.MIDDLEWARE_MANIFEST))
+          # next/dist/server/require.js [39:27]: require((0, _path).join(serverBuildPath, _constants.APP_PATHS_MANIFEST))
+          # next/dist/server/require.js [41:26]: require((0, _path).join(serverBuildPath, _constants.PAGES_MANIFEST))
+          # next/dist/server/require.js [88:11]: require(pagePath)
+          # next/dist/server/require.js [92:25]: require((0, _path).join(serverBuildPath, _constants.FONT_MANIFEST))
           "next/dist/server/require.js": []
 
 plugins:
