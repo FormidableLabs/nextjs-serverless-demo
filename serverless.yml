@@ -20,7 +20,7 @@ custom:
         # https://github.com/vercel/next.js/blob/ab40370ea5b69aa4dd601907eb85d25da1140b6b/packages/next/build/index.ts#L1257-L1280
         # https://unpkg.com/browse/next@12.1.0/dist/build/index.js (L765-L777)
         # https://github.com/vercel/next.js/blob/v13.0.2/packages/next/build/index.ts#L1807-L1823
-        - "next/dist/compiled/webpack/bundle5" # TODO(NEXT13): STILL HERE???
+        - "next/dist/compiled/webpack/bundle5"
         - "webpack5"
 
         # Ignore real deps in Next.js that we shouldn't need at runtime.
@@ -75,8 +75,10 @@ custom:
           # next/dist/compiled/cssnano-simple/index.js [1:22968]: require("caniuse-lite/data/features/"+v+".js")
           "next/dist/compiled/cssnano-simple/index.js": []
 
-          # TODO(NEXT13)
+          # Dynamic require function
+          # From: https://github.com/vercel/edge-runtime/blob/cec1f8493e14465692eec5f672cdb916b51e8e84/packages/vm/src/require.ts#L30-L77
           # next/dist/compiled/edge-runtime/index.js [1:6716]: require.resolve(c,{paths:[(0,s.dirname)(a)]})
+          "next/dist/compiled/edge-runtime/index.js": []
 
           # next/dist/compiled/jest-worker/index.js [1:7889]: require.resolve(e)
           # next/dist/compiled/jest-worker/index.js [1:22455]: require(e)
@@ -96,21 +98,24 @@ custom:
           "next/dist/compiled/react-dom/cjs/react-dom-server-legacy.browser.production.min.js":
             - "next/dist/compiled/react-dom/index.js"
 
-          # TODO(NEXT13)
+          # Dynamically look up package versions.
           # next/dist/lib/get-package-version.js [88:27]: require.resolve(`${name}/package.json`, {
+          "next/dist/lib/get-package-version.js": []
 
-          # TODO(NEXT13)
+          # Webpack build time replacements in `loadWebpackHook`
           # next/dist/server/config-utils.js [188:12]: require.resolve(replacement)
+          "next/dist/server/config-utils.js": []
 
-          # TODO(NEXT13)
+          # Dynamically require config path provided by user.
           # next/dist/server/config.js [68:35]: require(path)
           # next/dist/server/config.js [70:41]: import((0, _url).pathToFileURL(path).href)
+          "next/dist/server/config.js": []
 
           # next/dist/server/image-optimizer.js [54:12]: require(process.env.NEXT_SHARP_PATH || "sharp")
           "next/dist/server/image-optimizer.js": []
 
-          # TODO(NEXT13)
           # next/dist/server/lib/incremental-cache/index.js [29:30]: require(incrementalCacheHandlerPath)
+          "next/dist/server/lib/incremental-cache/index.js": []
 
           # next/dist/server/load-components.js [22:23]: require((0, _path).join(distDir, `fallback-${_constants.BUILD_MANIFEST}`))
           # next/dist/server/load-components.js [39:8]: require((0, _path).join(distDir, _constants.BUILD_MANIFEST))
