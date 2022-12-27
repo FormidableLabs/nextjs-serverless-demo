@@ -35,15 +35,15 @@
     "serverless-http": "^2.7.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.2",
+    "@babel/core": "^7.20.7",
     "@babel/eslint-parser": "^7.19.1",
     "@babel/preset-react": "^7.18.6",
-    "eslint": "^8.27.0",
+    "eslint": "^8.30.0",
     "eslint-config-formidable": "^4.0.0",
     "eslint-plugin-filenames": "^1.3.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react": "^7.31.11",
     "serverless": "^2.35.0",
     "serverless-jetpack": "^0.11.1",
     "serverless-offline": "^6.9.0"
