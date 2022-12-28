@@ -202,6 +202,7 @@ functions:
         - "!**/*.nft.json"
         # TODO(STATIC): Should be served outside Lambda in real production.
         - ".next/static/**"
+        - "public/images/**"
 
   # TODO(STATIC): Simple static server for root assets.
   root:
@@ -214,4 +215,5 @@ functions:
     package:
       include:
         # TODO(STATIC): Should be served outside Lambda in real production.
-        - "public/**"
+        # Only favicon is served from root handler.
+        - "public/favicon.ico"

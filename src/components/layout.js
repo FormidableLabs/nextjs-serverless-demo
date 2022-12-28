@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const name = "Next.js on AWS Lambda";
 export const siteTitle = "Next.js on AWS Lambda";
-const logoSrc = "/images/formidable-logo.png";
+const logoSrc = "/blog/images/formidable-logo.png";
 // eslint-disable-next-line max-len
 const ogImgSrc = `https://og-image.now.sh/${encodeURI(siteTitle)}.png?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`;
 
@@ -39,17 +39,15 @@ export default function Layout({ children, home }) {
         ) : (
           <>
             <Link href="/">
-              <a>
-                <img
-                  src={logoSrc}
-                  className={`${styles.headerImage} ${utilStyles.borderCircle}`}
-                  alt={name}
-                />
-              </a>
+              <img
+                src={logoSrc}
+                className={`${styles.headerImage} ${utilStyles.borderCircle}`}
+                alt={name}
+              />
             </Link>
             <h2 className={utilStyles.headingLg}>
-              <Link href="/">
-                <a className={utilStyles.colorInherit}>{name}</a>
+              <Link href="/" className={utilStyles.colorInherit}>
+                {name}
               </Link>
             </h2>
           </>
@@ -59,7 +57,7 @@ export default function Layout({ children, home }) {
       {!home && (
         <div className={styles.backToHome}>
           <Link href="/">
-            <a>← Back to home</a>
+            ← Back to home
           </Link>
         </div>
       )}
