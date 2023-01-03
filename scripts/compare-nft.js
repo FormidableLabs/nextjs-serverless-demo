@@ -23,6 +23,8 @@ const globby = require("globby");
 const AdmZip = require("adm-zip");
 const chalk = require("chalk");
 
+const cwd = path.resolve(__dirname, "..");
+
 // ============================================================================
 // Helpers
 // ============================================================================
@@ -37,14 +39,14 @@ const zipContents = (zipPath) => {
 
 // Needs `yarn build`
 const getNftFiles = async () => {
-  const nfts = await globby([".next/**/*.nft.json"], { cwd: __dirname });
+  const nfts = await globby([".next/**/*.nft.json"], { cwd });
   const allFiles = new Set();
 
   for (const nft of nfts) {
-    const dir = path.resolve(__dirname, path.dirname(nft));
-    const { files } = JSON.parse((await fs.readFile(path.resolve(__dirname, nft))).toString());
+    const dir = path.resolve(cwd, path.dirname(nft));
+    const { files } = JSON.parse((await fs.readFile(path.resolve(cwd, nft))).toString());
     for (const file of files) {
-      allFiles.add(path.relative(__dirname, path.resolve(dir, file)));
+      allFiles.add(path.relative(cwd, path.resolve(dir, file)));
     }
   }
 
@@ -53,7 +55,7 @@ const getNftFiles = async () => {
 
 // Needs `yarn lambda:sls package` after `yarn build`
 const getTraceFiles = async () => {
-  const files = zipContents(path.resolve(__dirname, ".serverless/blog.zip"));
+  const files = zipContents(path.resolve(cwd, ".serverless/blog.zip"));
   return new Set(files);
 };
 
