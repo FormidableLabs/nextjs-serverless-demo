@@ -23,10 +23,8 @@ const getApp = async () => {
 
   // Set up Next.js server.
   // We use the trace output generated Server file as our model from Next.js:
-  // https://unpkg.com/browse/next@12.1.0/dist/build/utils.js
+  // https://unpkg.com/browse/next/dist/build/utils.js
   // See `copyTracedFiles()` and outputted server.
-
-  // TODO(NEXT13): Revert to default next server???
   const nextApp = new NextNodeServer({
     dev: false,
     dir: path.resolve(__dirname, ".."),
