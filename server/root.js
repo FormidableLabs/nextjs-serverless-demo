@@ -7,17 +7,6 @@ const PORT = parseInt(process.env.SERVER_PORT || DEFAULT_PORT, 10);
 const HOST = process.env.SERVER_HOST || "0.0.0.0";
 const JSON_INDENT = 2;
 
-// Export root handlers so we can add those to Node.js localdev.
-const addRootHandlers = module.exports.addRootHandlers = (app) => {
-  // Page handlers,
-  app.use(express.static("public"));
-  app.get("/", (req, res) => res.json({
-    msg: "Root handler. Check out /blog for more!"
-  }));
-
-  return app;
-};
-
 // Create the server app.
 const getApp = async () => {
   // Stage, base path stuff.
@@ -26,7 +15,13 @@ const getApp = async () => {
   // Development tweaks.
   app.set("json spaces", JSON_INDENT);
 
-  addRootHandlers(app);
+  // Add here for `/favicon.ico`
+  app.use("/favicon.ico", express.static("public/favicon.ico"));
+
+  // Page handlers,
+  app.get("/", (req, res) => res.json({
+    msg: "Root handler. Check out /blog for more!"
+  }));
 
   return app;
 };

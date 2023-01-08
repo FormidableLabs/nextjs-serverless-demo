@@ -19,21 +19,23 @@ custom:
         # Stuff Next.js trace mode ignores.
         # https://github.com/vercel/next.js/blob/ab40370ea5b69aa4dd601907eb85d25da1140b6b/packages/next/build/index.ts#L1257-L1280
         # https://unpkg.com/browse/next@12.1.0/dist/build/index.js (L765-L777)
-        - "next/dist/compiled/webpack/bundle4"
+        # https://github.com/vercel/next.js/blob/v13.0.2/packages/next/build/index.ts#L1807-L1823
         - "next/dist/compiled/webpack/bundle5"
         - "webpack5"
 
         # Ignore real deps in Next.js that we shouldn't need at runtime.
         - "caniuse-lite"
         - "postcss"
+        - "webpack"
 
       allowMissing:
         "node-fetch":
           - "encoding"
         "next":
-          - "critters"  # for CSS optimization
-          - "pnpapi"    # for PnP usage
-          - "fibers"    # Part of sass-loader
+          - "critters"    # for CSS optimization
+          - "pnpapi"      # for PnP usage
+          - "fibers"      # Part of sass-loader
+          - "@next/font"  # Optional next font loading
           # If using `experimental.nextScriptWorkers = true` you'll need to remove
           # this allowMissing and `yarn add @builder.io/partytown`
           # See: https://nextjs.org/docs/basic-features/script#off-loading-scripts-to-a-web-worker-experimental
@@ -41,7 +43,6 @@ custom:
         # ... and here too for partytown.
         "./.next/server/pages/_document.js":
           - "@builder.io/partytown"
-
 
       dynamic:
         resolutions:
@@ -65,64 +66,82 @@ custom:
           "express/lib/view.js": []
 
           # Optional optimizer.
-          # next/dist/compiled/@ampproject/toolbox-optimizer/index.js [1:18400]: require.resolve(t)
+          # next/dist/compiled/@ampproject/toolbox-optimizer/index.js [1:21249]: require.resolve(e)
           "next/dist/compiled/@ampproject/toolbox-optimizer/index.js": []
 
           # Webpack plugin tool.
-          # next/dist/compiled/cssnano-simple/index.js [1:22560]: require.resolve(name,{paths:["."]})
-          # next/dist/compiled/cssnano-simple/index.js [1:22989]: require(__nccwpck_require2_(8440).resolve(path.join(v,"browserslist-stats.json"),{paths:["."]}))
-          # next/dist/compiled/cssnano-simple/index.js [1:24041]: require("caniuse-lite/data/regions/"+_+".js")
-          # next/dist/compiled/cssnano-simple/index.js [1:24281]: require("caniuse-lite/data/features/"+v+".js")
+          # next/dist/compiled/cssnano-simple/index.js [1:21238]: require.resolve(name,{paths:[".",ctx.path]})
+          # next/dist/compiled/cssnano-simple/index.js [1:21676]: require(__nccwpck_require2_(8440).resolve(path.join(v,"browserslist-stats.json"),{paths:["."]}))
+          # next/dist/compiled/cssnano-simple/index.js [1:22728]: require("caniuse-lite/data/regions/"+y+".js")
+          # next/dist/compiled/cssnano-simple/index.js [1:22968]: require("caniuse-lite/data/features/"+v+".js")
           "next/dist/compiled/cssnano-simple/index.js": []
 
-          # Webpack related.
-          # next/dist/compiled/jest-worker/index.js [1:8267]: require.resolve(e)
-          # next/dist/compiled/jest-worker/index.js [1:22446]: require(e)
+          # Dynamic require function
+          # From: https://github.com/vercel/edge-runtime/blob/cec1f8493e14465692eec5f672cdb916b51e8e84/packages/vm/src/require.ts#L30-L77
+          # next/dist/compiled/edge-runtime/index.js [1:6716]: require.resolve(c,{paths:[(0,s.dirname)(a)]})
+          "next/dist/compiled/edge-runtime/index.js": []
+
+          # next/dist/compiled/jest-worker/index.js [1:7889]: require.resolve(e)
+          # next/dist/compiled/jest-worker/index.js [1:22455]: require(e)
           "next/dist/compiled/jest-worker/index.js": []
 
-          # Image optimization.
-          # next/dist/server/image-optimizer.js [50:12]: require(process.env.NEXT_SHARP_PATH || 'sharp')
+          # Next13 next-server adds in a webpack / Node.js patching hook (ugh!) as well as
+          # compiled-in versions of libraries that we need to address.
+          # See
+          # - https://github.com/vercel/next.js/blob/v13.0.2/packages/next/server/next-server.ts#L1
+          # - https://github.com/vercel/next.js/blob/v13.0.2/packages/next/build/webpack/require-hook.ts
+          #
+          # Note diff from:
+          # - https://github.com/vercel/next.js/blob/v12.3.2/packages/next/server/next-server.ts
+          # These libraries require root "react-dom" which now should have the built-in index.
+          "next/dist/compiled/react-dom/cjs/react-dom-server-legacy.browser.development.js":
+            - "next/dist/compiled/react-dom/index.js"
+          "next/dist/compiled/react-dom/cjs/react-dom-server-legacy.browser.production.min.js":
+            - "next/dist/compiled/react-dom/index.js"
+
+          # Dynamically look up package versions.
+          # next/dist/lib/get-package-version.js [88:27]: require.resolve(`${name}/package.json`, {
+          "next/dist/lib/get-package-version.js": []
+
+          # Webpack build time replacements in `loadWebpackHook`
+          # next/dist/server/config-utils.js [188:12]: require.resolve(replacement)
+          "next/dist/server/config-utils.js": []
+
+          # Dynamically require config path provided by user.
+          # next/dist/server/config.js [68:35]: require(path)
+          # next/dist/server/config.js [70:41]: import((0, _url).pathToFileURL(path).href)
+          "next/dist/server/config.js": []
+
+          # next/dist/server/image-optimizer.js [54:12]: require(process.env.NEXT_SHARP_PATH || "sharp")
           "next/dist/server/image-optimizer.js": []
 
-          # (Needed in 12.1.0, but not 12.1.4+)
-          # # Server components.
-          # # next/dist/server/load-components.js [12:57]: require(`next/dist/pages/_document` + (hasConcurrentFeatures ? '-concurrent' : ''))
-          # # next/dist/server/load-components.js [22:23]: require((0, _path).join(distDir, `fallback-${_constants.BUILD_MANIFEST}`))
-          # # next/dist/server/load-components.js [61:8]: require((0, _path).join(distDir, _constants.BUILD_MANIFEST))
-          # # next/dist/server/load-components.js [62:8]: require((0, _path).join(distDir, _constants.REACT_LOADABLE_MANIFEST))
-          # "next/dist/server/load-components.js":
-          #   - "next/dist/pages/_document"
-          #   - "next/dist/pages/_document-concurrent"
-          #   # `path.join(distDir, **)` paths are already manually traced and included.
+          # next/dist/server/lib/incremental-cache/index.js [29:30]: require(incrementalCacheHandlerPath)
+          "next/dist/server/lib/incremental-cache/index.js": []
 
-          # Next 12.1.4+
           # next/dist/server/load-components.js [22:23]: require((0, _path).join(distDir, `fallback-${_constants.BUILD_MANIFEST}`))
-          # next/dist/server/load-components.js [59:8]: require((0, _path).join(distDir, _constants.BUILD_MANIFEST))
-          # next/dist/server/load-components.js [60:8]: require((0, _path).join(distDir, _constants.REACT_LOADABLE_MANIFEST))
-          # next/dist/server/load-components.js [61:27]: require((0, _path).join(distDir, 'server', _constants.MIDDLEWARE_FLIGHT_MANIFEST + '.json'))
+          # next/dist/server/load-components.js [39:8]: require((0, _path).join(distDir, _constants.BUILD_MANIFEST))
+          # next/dist/server/load-components.js [40:8]: require((0, _path).join(distDir, _constants.REACT_LOADABLE_MANIFEST))
+          # next/dist/server/load-components.js [41:30]: require((0, _path).join(distDir, "server", _constants.FLIGHT_MANIFEST + ".json"))
           "next/dist/server/load-components.js": []
 
           # Runtime build directory imports.
-          # node_modules/next/dist/server/next-server.js [118:15]: require(pagesManifestPath)
-          # node_modules/next/dist/server/next-server.js [373:33]: require(builtPagePath)
-          # node_modules/next/dist/server/next-server.js [458:15]: require((0, _path).join(this.distDir, 'server', _constants.MIDDLEWARE_FLIGHT_MANIFEST + '.json'))
-          # node_modules/next/dist/server/next-server.js [601:19]: require(middlewareManifestPath)
-          # node_modules/next/dist/server/next-server.js [894:25]: require((0, _path).join(this.distDir, _constants.PRERENDER_MANIFEST))
-          # node_modules/next/dist/server/next-server.js [898:15]: require((0, _path).join(this.distDir, _constants.ROUTES_MANIFEST))
+          # next/dist/server/next-server.js [149:15]: require((0, _path).join(this.serverDistDir, _constants.PAGES_MANIFEST))
+          # next/dist/server/next-server.js [154:19]: require(appPathsManifestPath)
+          # next/dist/server/next-server.js [469:33]: require(builtPagePath)
+          # next/dist/server/next-server.js [587:15]: require((0, _path).join(this.distDir, "server", _constants.FLIGHT_MANIFEST + ".json"))
+          # next/dist/server/next-server.js [591:15]: require((0, _path).join(this.distDir, "server", _constants.FLIGHT_SERVER_CSS_MANIFEST + ".json"))
+          # next/dist/server/next-server.js [595:15]: require((0, _path).join(this.distDir, "server", `${_constants.FONT_LOADER_MANIFEST}.json`))
+          # next/dist/server/next-server.js [988:25]: require((0, _path).join(this.serverDistDir, _constants.MIDDLEWARE_MANIFEST))
+          # next/dist/server/next-server.js [1018:25]: require((0, _path).join(this.serverDistDir, _constants.MIDDLEWARE_MANIFEST))
+          # next/dist/server/next-server.js [1341:25]: require((0, _path).join(this.distDir, _constants.PRERENDER_MANIFEST))
+          # next/dist/server/next-server.js [1345:15]: require((0, _path).join(this.distDir, _constants.ROUTES_MANIFEST))
           "next/dist/server/next-server.js": []
-          # node_modules/next/dist/server/require.js [22:26]: require((0, _path).join(serverBuildPath, _constants.PAGES_MANIFEST))
-          # node_modules/next/dist/server/require.js [48:11]: require(pagePath)
-          # node_modules/next/dist/server/require.js [52:25]: require((0, _path).join(serverBuildPath, _constants.FONT_MANIFEST))
-          # node_modules/next/dist/server/require.js [57:31]: require((0, _path).join(serverBuildPath, _constants.MIDDLEWARE_MANIFEST))
-          "next/dist/server/require.js": []
 
-          # Allows arbitrary importing of code and execution in a VM. All bets are off :P
-          # node_modules/next/dist/server/web/sandbox/require.js [21:25]: require.resolve(specifier, {
-          #     paths: [
-          #         (0, _path).dirname(referrer)
-          #     ]
-          # })
-          "next/dist/server/web/sandbox/require.js": []
+          # next/dist/server/require.js [39:27]: require((0, _path).join(serverBuildPath, _constants.APP_PATHS_MANIFEST))
+          # next/dist/server/require.js [41:26]: require((0, _path).join(serverBuildPath, _constants.PAGES_MANIFEST))
+          # next/dist/server/require.js [88:11]: require(pagePath)
+          # next/dist/server/require.js [92:25]: require((0, _path).join(serverBuildPath, _constants.FONT_MANIFEST))
+          "next/dist/server/require.js": []
 
 plugins:
   - serverless-jetpack
@@ -132,7 +151,7 @@ provider:
   name: aws
 
   # Lambda configuration
-  runtime: nodejs12.x
+  runtime: nodejs16.x
   timeout: 30 # seconds (`300` max)
   memorySize: 1024 # MB value (`1024` default)
 
@@ -184,6 +203,7 @@ functions:
         - "!**/*.nft.json"
         # TODO(STATIC): Should be served outside Lambda in real production.
         - ".next/static/**"
+        - "public/images/**"
 
   # TODO(STATIC): Simple static server for root assets.
   root:
@@ -196,4 +216,5 @@ functions:
     package:
       include:
         # TODO(STATIC): Should be served outside Lambda in real production.
-        - "public/**"
+        # Only favicon is served from root handler.
+        - "public/favicon.ico"

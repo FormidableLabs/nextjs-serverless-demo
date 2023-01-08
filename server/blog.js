@@ -5,7 +5,6 @@ const path = require("path");
 const express = require("express");
 const NextNodeServer = require("next/dist/server/next-server").default;
 const { defaultConfig } = require("next/dist/server/config-shared");
-const { addRootHandlers } = require("./root");
 const nextConfig = require("../next.config");
 
 const DEFAULT_PORT = 4000;
@@ -14,7 +13,7 @@ const HOST = process.env.SERVER_HOST || "0.0.0.0";
 const JSON_INDENT = 2;
 
 // Create the server app.
-const getApp = async ({ extraHandlers } = {}) => {
+const getApp = async () => {
   // Get server config.
   // TODO(18): Do full Next.js configuration mutations.
   //           Our simple assign() here only works because our next.config.js
@@ -24,7 +23,7 @@ const getApp = async ({ extraHandlers } = {}) => {
 
   // Set up Next.js server.
   // We use the trace output generated Server file as our model from Next.js:
-  // https://unpkg.com/browse/next@12.1.0/dist/build/utils.js
+  // https://unpkg.com/browse/next/dist/build/utils.js
   // See `copyTracedFiles()` and outputted server.
   const nextApp = new NextNodeServer({
     dev: false,
@@ -43,10 +42,8 @@ const getApp = async ({ extraHandlers } = {}) => {
   // Development tweaks.
   app.set("json spaces", JSON_INDENT);
 
-  // Add in extra handlers
-  if (extraHandlers) {
-    extraHandlers(app);
-  }
+  // Add here for `/blog/images/**`
+  app.use(express.static("public"));
 
   // Page handlers,
   app.use((req, res) => {
@@ -76,9 +73,7 @@ module.exports.handler = async (event, context) => {
 // DOCKER/DEV/ANYTHING: Start the server directly.
 if (require.main === module) {
   (async () => {
-    const server = (await getApp({
-      extraHandlers: addRootHandlers
-    })).listen({
+    const server = (await getApp()).listen({
       port: PORT,
       host: HOST
     }, () => {
