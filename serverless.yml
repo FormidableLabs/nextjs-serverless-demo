@@ -37,7 +37,7 @@ custom:
           - "fibers"      # Part of sass-loader
           - "@next/font"  # Optional next font loading
           # If using `experimental.nextScriptWorkers = true` you'll need to remove
-          # this allowMissing and `yarn add @builder.io/partytown`
+          # this allowMissing and `npm --save @builder.io/partytown`
           # See: https://nextjs.org/docs/basic-features/script#off-loading-scripts-to-a-web-worker-experimental
           - "@builder.io/partytown"
         # ... and here too for partytown.
