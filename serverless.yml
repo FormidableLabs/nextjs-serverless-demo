@@ -151,7 +151,7 @@ provider:
   name: aws
 
   # Lambda configuration
-  runtime: nodejs16.x
+  runtime: nodejs12.x # TODO(npm): offline doesn't like
   timeout: 30 # seconds (`300` max)
   memorySize: 1024 # MB value (`1024` default)
 
