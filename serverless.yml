@@ -37,7 +37,7 @@ custom:
           - "fibers"      # Part of sass-loader
           - "@next/font"  # Optional next font loading
           # If using `experimental.nextScriptWorkers = true` you'll need to remove
-          # this allowMissing and `npm --save @builder.io/partytown`
+          # this allowMissing and `npm install --save @builder.io/partytown`
           # See: https://nextjs.org/docs/basic-features/script#off-loading-scripts-to-a-web-worker-experimental
           - "@builder.io/partytown"
         # ... and here too for partytown.
@@ -151,7 +151,7 @@ provider:
   name: aws
 
   # Lambda configuration
-  runtime: nodejs12.x # TODO(npm): offline doesn't like
+  runtime: nodejs22.x
   timeout: 30 # seconds (`300` max)
   memorySize: 1024 # MB value (`1024` default)
 
