@@ -8,6 +8,9 @@ custom:
   service: ${env:SERVICE_NAME}
   region: ${opt:region, env:AWS_REGION}
   stage: ${opt:stage, env:STAGE}
+  # Old serverless-offline has hard-coded runtime constraint checks.
+  # `AWS_NODEJS_RUNTIME=nodejs14.x` will work as a hack for it.
+  runtime: ${env:AWS_NODEJS_RUNTIME, "nodejs22.x"}
   jetpack:
     preInclude:
       - "!**" # Start with no files at all.
@@ -151,7 +154,7 @@ provider:
   name: aws
 
   # Lambda configuration
-  runtime: nodejs22.x
+  runtime: ${self:custom.runtime}
   timeout: 30 # seconds (`300` max)
   memorySize: 1024 # MB value (`1024` default)
 
