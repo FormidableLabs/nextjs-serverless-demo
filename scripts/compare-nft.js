@@ -7,8 +7,8 @@
  *
  * ```sh
  * # Build / package everything.
- * $ yarn clean && yarn build
- * $ yarn lambda:sls package
+ * $ npm run clean && npm run build
+ * $ npm run lambda:sls package
  *
  * # Run comparison.
  * $ node ./scripts/compare-nft.js
@@ -37,7 +37,7 @@ const zipContents = (zipPath) => {
 };
 
 
-// Needs `yarn build`
+// Needs `npm run build`
 const getNftFiles = async () => {
   const nfts = await globby([".next/**/*.nft.json"], { cwd });
   const allFiles = new Set();
@@ -53,7 +53,7 @@ const getNftFiles = async () => {
   return allFiles;
 };
 
-// Needs `yarn lambda:sls package` after `yarn build`
+// Needs `npm run lambda:sls package` after `npm run build`
 const getTraceFiles = async () => {
   const files = zipContents(path.resolve(cwd, ".serverless/blog.zip"));
   return new Set(files);

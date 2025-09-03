@@ -7,12 +7,7 @@ Deploy Next.js to AWS Lambda using the Serverless Application Framework.
 
 ## Project notes
 
-This demo uses the following tools:
-
-- [Nodejs](https://nodejs.org/en/download/) 12.16+ or higher
-- [Yarn](https://classic.yarnpkg.com/en/docs/install)
-
-and is based on the following projects:
+This demo is based on the following projects:
 
 - [nextjs-fargate-demo](https://github.com/FormidableLabs/nextjs-fargate-demo): We deploy the same Next.js application.
 - [aws-lambda-serverless-reference][]: A reference Serverless Application Framework project with additional Terraform support for IAM permission boundaries.
@@ -26,7 +21,7 @@ The main goals of this demo project are as follows:
     Here's our starting point with `serverless` target:
 
     ```sh
-    $ yarn clean && yarn build && yarn lambda:sls package --report
+    $ npm run clean && npm run build && npm run lambda:sls package --report
     $ du -sh .serverless/blog.zip && zipinfo -1 .serverless/blog.zip | wc -l
     4.0M	.serverless/blog.zip
     290
@@ -37,7 +32,7 @@ The main goals of this demo project are as follows:
     Here's with `server` target:
 
     ```sh
-    $ yarn clean && yarn build && yarn lambda:sls package --report
+    $ npm run clean && npm run build && npm run lambda:sls package --report
     $ du -sh .serverless/blog.zip && zipinfo -1 .serverless/blog.zip | wc -l
     3.0M	.serverless/blog.zip
     1291
@@ -86,7 +81,7 @@ Some caveats:
 Start with:
 
 ```sh
-$ yarn install
+$ npm install
 ```
 
 Then we provide a lot of different ways to develop the server.
@@ -107,7 +102,7 @@ Then we provide a lot of different ways to develop the server.
 The built-in Next.js dev server, compilation and all.
 
 ```sh
-$ yarn dev
+$ npm run dev
 ```
 
 and visit: http://127.0.0.1:3000/blog/
@@ -117,8 +112,8 @@ and visit: http://127.0.0.1:3000/blog/
 We have a Node.js custom `express` server that uses _almost_ all of the Lambda code, which is sometimes an easier development experience that `serverless-offline`. This also could theoretically serve as a real production server on a bare metal or containerized compute instance outside of Lambda.
 
 ```sh
-$ yarn clean && yarn build
-$ yarn start
+$ npm run clean && npm run build
+$ npm run start
 ```
 
 and visit: http://127.0.0.1:4000/blog/
@@ -128,8 +123,8 @@ and visit: http://127.0.0.1:4000/blog/
 This uses `serverless-offline` to simulate the application running on Lambda.
 
 ```sh
-$ yarn clean && yarn build
-$ yarn lambda:localdev
+$ npm run clean && npm run build
+$ npm run lambda:localdev
 ```
 
 and visit: http://127.0.0.1:5000/blog/
@@ -172,18 +167,18 @@ We will use `serverless` to deploy to AWS Lambda.
 
 ```sh
 # Build for production.
-$ yarn clean && yarn build
+$ npm run clean && npm run build
 
 # Deploy
 $ STAGE=sandbox aws-vault exec AWS_USER -- \
-  yarn lambda:deploy
+  npm run lambda:deploy
 
 # Check on app and endpoints.
 $ STAGE=sandbox aws-vault exec AWS_USER -- \
-  yarn lambda:info
+  npm run lambda:info
 ```
 
-See the [aws-lambda-serverless-reference][] docs for additional Serverless/Lambda (`yarn lambda:*`) tasks you can run.
+See the [aws-lambda-serverless-reference][] docs for additional Serverless/Lambda (`npm run lambda:*`) tasks you can run.
 
 As a useful helper we've separately hooked up a custom domain for `STAGE=sandbox` at:
 
